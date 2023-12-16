@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="Apex Methods Test" icon-name="custom:custom63">
+        <div class="slds-var-m-around_medium">
+            <lightning-button label="Test getCountries" onclick={testGetCountries}></lightning-button>
+            <lightning-button label="Test getStores" onclick={testGetStores}></lightning-button>
+            <lightning-button label="Test getOwners" onclick={testGetOwners}></lightning-button>
+            <lightning-button label="Test getAccounts" onclick={testGetAccounts}></lightning-button>
+
+            <template if:true={data}>
+                <pre>{data}</pre>
+            </template>
+            <template if:true={error}>
+                <p class="slds-text-color_error">Error: {error}</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

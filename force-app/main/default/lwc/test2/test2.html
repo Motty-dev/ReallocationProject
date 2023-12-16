@@ -1,0 +1,58 @@
+<template>
+  <div class="slds-card">
+      <!-- Header Section -->
+      <c-header-card title="Select Main SA -- TEST --" icon-name="utility:insert_tag_field"></c-header-card>
+      
+      <!-- Flexbox Container -->
+      <div class="container">
+          <!-- Custom Combobox for Country -->
+          <div class="flex-item">
+              <c-custom-combobox name="country"
+                                 label="Country"
+                                 options={countryOptions}
+                                 value={selectedCountry}
+                                 onvaluechange={handleCountryChange}
+                                 disabled={isCountryDisabled}>
+              </c-custom-combobox>
+          </div>
+          
+          <!-- Custom Combobox for SA Boutique -->
+          <div class="flex-item">
+              <c-custom-combobox name="saBoutique"
+                                 label="SA Boutique"
+                                 options={saBoutiqueOptions}
+                                 value={selectedSaBoutique}
+                                 onvaluechange={handleStoreChange}
+                                 disabled={isStoreDisabled}>
+              </c-custom-combobox>
+          </div>
+
+          <!-- Custom Combobox for Main SA -->
+          <div class="flex-item">
+              <c-custom-combobox name="mainSa"
+                                 label="Main SA"
+                                 options={mainSaOptions}
+                                 value={selectedMainSa}
+                                 onvaluechange={handleOwnerChange}
+                                 disabled={isOwnerDisabled}>
+              </c-custom-combobox>
+          </div>
+          <!-- Test Zone -------------------------------------------------------------------------->
+          <div class="flex-item">
+                <c-multi-box>
+
+                </c-multi-box>
+          </div>
+          <!-- Test Zone -------------------------------------------------------------------------->
+          <!-- Search Button -->
+          <div class="flex-item">
+              <lightning-button label="Search Clients" 
+                                variant="brand"
+                                onclick={handleSearch}>
+              </lightning-button>
+          </div>
+      </div>
+  </div>
+</template>
+
+

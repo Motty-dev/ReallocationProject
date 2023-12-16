@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: var(--lwc-varSpacingMedium); /* Use the Salesforce design token for medium spacing */
+}
+
+.flex-item {
+    flex: 1;
+    padding: var(--lwc-varSpacingXSmall); /* Use a smaller spacing token for the padding between items */
+}
+
+/* Additional styling for the button to ensure it aligns well with the comboboxes */
+.lightning-button {
+    height: auto; /* or a specific height if needed */
+}

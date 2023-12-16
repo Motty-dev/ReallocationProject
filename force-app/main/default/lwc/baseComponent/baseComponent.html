@@ -1,0 +1,19 @@
+<template>
+    <article class="slds-card">
+      <c-header-card title="Reallocate Clients" icon-name="utility:change_owner"></c-header-card>
+
+      <div class="slds-card__body">
+        <lightning-button-group>
+            <lightning-button label="Single Reallocation" onclick={handleSingleClick} variant={singleVariant}></lightning-button>
+            <lightning-button label="Mass Reallocation" onclick={handleMassClick} variant={massVariant}></lightning-button>
+        </lightning-button-group>
+        
+        <template if:true={isSingleSelected}>
+            <c-single-reallocation></c-single-reallocation>
+        </template>
+        <template if:true={isMassSelected}>
+            <div class="slds-text-heading_medium">In Work</div>
+        </template>
+    </div>
+    </article>
+</template>

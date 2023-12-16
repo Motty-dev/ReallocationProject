@@ -1,0 +1,372 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class={dropdownClasses} data-id={componentId}>
+        <!-- Search Input -->
+        <lightning-input type="search" label={label} placeholder={placeholder} onchange={handleSearchChange}></lightning-input>
+        
+        <!-- Dropdown List -->
+        <template if:true={isDropDownOpen}>
+            <div class="dropdown-list slds-dropdown slds-dropdown_fluid">
+                <ul class="slds-listbox slds-listbox_vertical" role="listbox">
+                    <!-- Select All / Deselect All -->
+                    <li class="slds-listbox__item">
+                        <button type="button" class="slds-button slds-button_reset" onclick={handleSelectAll}>Select All</button>
+                        <button type="button" class="slds-button slds-button_reset" onclick={handleDeselectAll}>Deselect All</button>
+                    </li>
+                    
+                    <!-- Options List -->
+                    <template for:each={filteredOptions} for:item="option">
+                        <li key={option.value} role="presentation" class="slds-listbox__item">
+                            <div class="slds-media slds-listbox__option" role="option">
+                                <span class="slds-media__figure">
+                                    <lightning-input type="checkbox" label={option.label} checked={option.selected} data-value={option.value} onchange={handleCheckboxChange}>
+                                    </lightning-input>
+                                </span>
+                                <span class="slds-media__body">
+                                    <span class="slds-truncate" title={option.label}>{option.label}</span>
+                                </span>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+        
+        <!-- Apply Button -->
+        <button class="slds-button slds-button_brand apply-button" onclick={handleApply}>Apply</button>
+    </div>
+</template>
+
+
+
+import { LightningElement, api, track } from 'lwc';
+
+export default class CustomCombobox extends LightningElement {
+    @api componentId;
+    @api label;
+    @api placeholder;
+    @api rows; // options passed as [{ label, value }, ...]
+    @track filteredOptions = [];
+    @track isDropDownOpen = false;
+
+    // Getter to dynamically assign classes for dropdown
+    get dropdownClasses() {
+        return `slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click ${this.isDropDownOpen ? 'slds-is-open' : ''}`;
+    }
+
+    // Connected Callback to initialize the component with options
+    connectedCallback() {
+        this.filteredOptions = this.rows;
+    }
+
+    // Search change handler
+    handleSearchChange(event) {
+        const searchTerm = event.target.value.toLowerCase();
+        this.filteredOptions = this.rows.filter(option =>
+            option.label.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    // Checkbox change handler
+    handleCheckboxChange(event) {
+        const value = event.target.dataset.value;
+        const selected = event.target.checked;
+        this.filteredOptions = this.filteredOptions.map(option => {
+            if (option.value === value) {
+                return { ...option, selected };
+            }
+            return option;
+        });
+    }
+
+    // Select all handler
+    handleSelectAll() {
+        this.filteredOptions = this.filteredOptions.map(option => ({ ...option, selected: true }));
+    }
+
+    // Deselect all handler
+    handleDeselectAll() {
+        this.filteredOptions = this.filteredOptions.map(option => ({ ...option, selected: false }));
+    }
+
+    // Apply button handler
+    handleApply() {
+        const selectedValues = this.filteredOptions.filter(option => option.selected).map(option => option.value);
+        // Dispatch event with the selected values
+        this.dispatchEvent(new CustomEvent('selectionchange', {
+            detail: { selectedValues, componentId: this.componentId }
+        }));
+        this.isDropDownOpen = false; // Close the dropdown
+    }
+}
+
+
+public with sharing class ReallocationClientApp {
+    @AuraEnabled(cacheable=true)
+    public static List<Country__c> getCountries(){
+        return [SELECT  Id, Name 
+                FROM Country__c   
+                ORDER BY Name];
+    }
+    @AuraEnabled(cacheable=true)
+    public static List<AggregateResult> getStores(List<String> listCountry){
+        return[SELECT MainBoutique__r.Name , MainBoutique__r.ISO_code__c,  MainBoutique__c
+        FROM Account 
+        WHERE MainBoutique__c != null AND MainBoutique__r.ISO_code__c IN :listCountry
+        GROUP BY MainBoutique__c, MainBoutique__r.Name, MainBoutique__r.ISO_code__c
+        ORDER BY MainBoutique__r.Name
+        ];
+    }
+    @AuraEnabled(cacheable=true)
+    public static List<AggregateResult> getOwners(List<String> listStores){
+        return [SELECT MainBoutique__c, OwnerId, Owner.LastName, Owner.FirstName, COUNT(Id) accountCount 
+        FROM Account 
+        WHERE MainBoutique__c IN :listStores  
+        GROUP BY MainBoutique__c, OwnerId , Owner.LastName, Owner.FirstName];
+    }
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccounts(List<String> listOwners){
+        return [SELECT Id,  LastName, FirstName, PersonEmail,  Segment__c, OwnerId, Owner.LastName, Owner.FirstName, MainBoutique__r.Name  
+                FROM Account
+                WHERE OwnerId  = :listOwners];
+    }
+    
+    // @AuraEnabled(cacheable=true)
+    // public static List<AggregateResult> getPie(List<String> ownerIds) {
+    //     return [
+    //         SELECT Segment__c, COUNT(Id) val
+    //         FROM Account
+    //         WHERE OwnerId IN :ownerIds
+    //         GROUP BY Segment__c
+    //         ORDER BY Segment__c
+    //     ];
+    // }
+
+    // @AuraEnabled
+    // public static void Realloc(List<String> lstIdAccounts, String newOwnerId) {
+    //     List<Account> accounts = [SELECT Id, OwnerId, MainBoutique__c 
+    //                                   FROM Account 
+    //                                   WHERE RecordType.Id = '012Qy000000PebqIAC' AND Id IN :lstIdAccounts];
+    //     User newOw = [SELECT Id, Store_Code__c FROM User WHERE Id = :newOwnerId];
+    //     for (Account a : accounts) {
+    //             a.OwnerId = newOw.Id;
+    //             a.MainBoutique__c = newOw.Store_Code__c;
+    //         }
+    //     update accounts;
+    // }
+
+}
+
+
+
+
+
+<template>
+    <lightning-combobox name={name}
+                        label={label}
+                        placeholder={placeholder}
+                        options={options}
+                        value={value}
+                        onchange={handleChange}>
+    </lightning-combobox>
+</template>
+
+
+
+
+
+// parentComponent.js
+// ... imports
+
+export default class ParentComponent extends LightningElement {
+    countryOptions = /* ... your country options ... */;
+    saBoutiqueOptions = /* ... your SA Boutique options ... */;
+    selectedCountry;
+    selectedSaBoutique;
+
+    handleCountryChange(event) {
+        this.selectedCountry = event.detail.value;
+        // After country is selected, enable the SA Boutique combobox
+        // by setting its options and changing disabled to false
+        this.template.querySelector('c-custom-combobox[name="saBoutique"]').setOptionsAndEnable(this.saBoutiqueOptions);
+    }
+    
+    // ... rest of your component's code
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<template>
+    <div class="slds-card">
+        <!-- Header Section -->
+        <c-header-card title="Select Main SA" icon-name="utility:add_source"></c-header-card>
+        
+        <!-- Comboboxes and Search Button Section -->
+        <div class="slds-grid slds-var-m-around_medium slds-gutters slds-grid_align-center slds-grid_align-spread">
+            <!-- Custom Combobox for Country -->
+            <div class="slds-col slds-size_1-of-3">
+                <c-custom-combobox name="country"
+                                   label="Country"
+                                   options={countryOptions}
+                                   value={selectedCountry}
+                                   onvaluechange={handleComboboxChange}>
+                </c-custom-combobox>
+            </div>
+            <!-- Custom Combobox for SA Boutique -->
+            <div class="slds-col slds-size_1-of-3">
+                <c-custom-combobox name="saBoutique"
+                                   label="SA Boutique"
+                                   options={saBoutiqueOptions}
+                                   value={selectedSaBoutique}
+                                   onvaluechange={handleComboboxChange}>
+                </c-custom-combobox>
+            </div>
+            <!-- Custom Combobox for Main SA -->
+            <div class="slds-col slds-size_1-of-3">
+                <c-custom-combobox name="mainSa"
+                                   label="Main SA"
+                                   options={mainSaOptions}
+                                   value={selectedMainSa}
+                                   onvaluechange={handleComboboxChange}>
+                </c-custom-combobox>
+            </div>
+            <!-- Search Button -->
+            <div class="slds-col button-container">
+                <lightning-button label="Search Clients" 
+                                  variant="brand"
+                                  class="slds-align_absolute-center" 
+                                  onclick={handleSearch}>
+                </lightning-button>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+
+
+
+
+
+<template>
+  <div class="slds-card">
+      <!-- Header Section -->
+      <c-header-card title="Select Main SA -- TEST --" icon-name="utility:insert_tag_field"></c-header-card>
+      
+      <!-- Flexbox Container -->
+      <div class="container">
+          <!-- Custom Combobox for Country -->
+          <div class="flex-item">
+              <c-custom-combobox name="country"
+                                 label="Country"
+                                 options={countryOptions}
+                                 value={selectedCountry}
+                                 onvaluechange={handleCountryChange}
+                                 disabled={isCountryDisabled}>
+              </c-custom-combobox>
+          </div>
+          
+          <!-- Custom Combobox for SA Boutique -->
+          <div class="flex-item">
+              <c-custom-combobox name="saBoutique"
+                                 label="SA Boutique"
+                                 options={saBoutiqueOptions}
+                                 value={selectedSaBoutique}
+                                 onvaluechange={handleStoreChange}
+                                 disabled={isStoreDisabled}>
+              </c-custom-combobox>
+          </div>
+
+          <!-- Custom Combobox for Main SA -->
+          <div class="flex-item">
+              <c-custom-combobox name="mainSa"
+                                 label="Main SA"
+                                 options={mainSaOptions}
+                                 value={selectedMainSa}
+                                 onvaluechange={handleOwnerChange}
+                                 disabled={isOwnerDisabled}>
+              </c-custom-combobox>
+          </div>
+          <div class="flex-item">
+                <c-test-combo>
+
+                </c-test-combo>
+          </div>
+          <!-- Search Button -->
+          <div class="flex-item">
+              <lightning-button label="Search Clients" 
+                                variant="brand"
+                                onclick={handleSearch}>
+              </lightning-button>
+          </div>
+      </div>
+  </div>
+</template>
+
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+
+.dropdown-button {
+    background-color: var(--lwc-brandPrimary, #0176d3); /* Primary brand color */
+    color: var(--lwc-colorTextInverse, #ffffff); /* Inverse text color for readability */
+    padding: var(--lwc-varSpacingMedium, spacingMedium); /* Standard medium spacing */
+    font-size: fontSize5; /* Medium text size */
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown content styling */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--lwc-colorBackground, #ffffff); /* Standard background color */
+    min-width: 160px;
+    box-shadow: var(--lwc-shadow, var(--lwc-spacingNone, 0) var(--lwc-spacingXSmall, 0.5rem) var(--lwc-spacingMedium, 1rem) var(--lwc-spacingNone, 0) rgba(0,0,0,0.2)); /* Standard shadow */
+    z-index: var(--lwc-zIndexDefault, 1); /* Default z-index */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Dropdown item styling */
+.dropdown-item {
+    color: var(--lwc-colorTextDefault, #16325c); /* Default text color */
+    padding: var(--lwc-varSpacingSmall, spacingSmall); /* Small spacing */
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-item:hover {
+    background-color: var(--lwc-colorBackgroundHighlight, #f4f6f9); /* Highlight background color */
+}
+
+/* Apply button styling */
+.apply-button {
+    background-color: var(--lwc-colorBackgroundButtonBrand, #0070d2); /* Brand button background color */
+    color: var(--lwc-colorTextButtonBrand, #ffffff); /* Brand button text color */
+    padding: var(--lwc-varSpacingMedium, spacingMedium);
+    border: none;
+    cursor: pointer;
+    width: spacingMedium;
+    box-sizing: border-box;
+}

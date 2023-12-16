@@ -1,0 +1,16 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class="dropdown">
+        <button class="dropdown-button" onclick={toggleDropdown}>{label}</button>
+        <template if:true={dropdownOpen}>
+            <div class="dropdown-content">
+                <template for:each={options} for:item="option">
+                    <div key={option.value} class="dropdown-item" data-value={option.value} onclick={handleOptionChange}>
+                        {option.label}
+                    </div>
+                </template>
+                <button class="apply-button" onclick={handleApply}>Apply</button>
+            </div>
+        </template>
+    </div>
+</template>
