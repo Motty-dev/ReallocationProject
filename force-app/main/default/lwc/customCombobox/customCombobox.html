@@ -1,20 +1,9 @@
 <!-- customCombobox.html -->
 <template>
     <div class="custom-combobox">
-        <lightning-input type="search" label="Search" onchange={handleSearchChange}>
+        <lightning-input type="text" label="Search" onchange={handleSearchChange}>
         </lightning-input>
         <!-- You will need to build a custom dropdown list to handle multi-select -->
-        <div class="dropdown">
-            <template for:each={filteredOptions} for:item="option">
-                <div key={option.value} class="dropdown-item">
-                    <lightning-input type="checkbox"
-                                     label={option.label}
-                                     value={option.value}
-                                     onchange={handleCheckboxChange}>
-                    </lightning-input>
-                </div>
-            </template>
-        </div>
         <!-- <lightning-button label="Apply" onclick={handleApply}></lightning-button> -->
     </div>
 </template>

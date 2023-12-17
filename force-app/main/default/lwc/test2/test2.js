@@ -13,7 +13,17 @@ export default class SingleReallocation extends LightningElement {
     @track isCountryDisabled = false;
     @track isStoreDisabled = true;
     @track isOwnerDisabled = true;
+    @track countryOptions = [
+        // Replace these with actual options you want to provide
+        { label: 'Australia', value: 'AU' },
+        { label: 'Canada', value: 'CA' },
+        // Add more options as needed...
+    ];
 
+    handleSelectionChange(event) {
+        // Handle the selection change
+        console.log('Selected values:', event.detail.values);
+    }
     @wire(getCountries)
     wiredCountries({ error, data }) {
         if (data) {

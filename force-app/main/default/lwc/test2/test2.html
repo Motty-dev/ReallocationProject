@@ -18,30 +18,19 @@
           
           <!-- Custom Combobox for SA Boutique -->
           <div class="flex-item">
-              <c-custom-combobox name="saBoutique"
-                                 label="SA Boutique"
-                                 options={saBoutiqueOptions}
-                                 value={selectedSaBoutique}
-                                 onvaluechange={handleStoreChange}
-                                 disabled={isStoreDisabled}>
-              </c-custom-combobox>
+              <c-multi-box2>
+
+              </c-multi-box2>
           </div>
 
-          <!-- Custom Combobox for Main SA -->
-          <div class="flex-item">
-              <c-custom-combobox name="mainSa"
-                                 label="Main SA"
-                                 options={mainSaOptions}
-                                 value={selectedMainSa}
-                                 onvaluechange={handleOwnerChange}
-                                 disabled={isOwnerDisabled}>
-              </c-custom-combobox>
-          </div>
           <!-- Test Zone -------------------------------------------------------------------------->
           <div class="flex-item">
-                <c-multi-box>
-
-                </c-multi-box>
+            <c-multi-box component-id="uniqueId1"
+                                label="Country"
+                                placeholder="Select Countries"
+                                options={countryOptions}
+                                onselectionchange={handleSelectionChange}>
+            </c-multi-box>
           </div>
           <!-- Test Zone -------------------------------------------------------------------------->
           <!-- Search Button -->

@@ -1,59 +1,44 @@
 <template>
-	<lightning-card>
-		<div class="slds-var-m-left_large slds-var-m-right_large" onmouseleave={mousehandler}>
+    <lightning-card>
+        <div class="slds-var-m-left_large slds-var-m-right_large relative-position" onmouseleave={mouseLeaveHandler} data-id={componentId}>
+            <!-- Modified input to show selected values or placeholder -->
+            <lightning-input type="text" label={label} value={displayedValue}
+                onclick={clickHandler} placeholder={placeholder} readonly style="border: 1px solid #d8dde6; border-radius: 0.25rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+            </lightning-input>
 
-			<!-- Below code is for lightning input search box which will filter picklist result based on inputs given by user -->
-			<lightning-input type="search" label="Search Objects" onchange={handleSearch} value={searchTerm}
-				onblur={blurhandler} onfocusout={focuhandler} onclick={clickhandler} placeholder={itemcounts}>
-			</lightning-input>
+            <!-- Dropdown with Header and Footer -->
+            <template if:true={showDropdown}>
+                <div class="absolute-position slds-box_border dropdown-style">
+                    <!-- Dropdown Header -->
+                    <div class="dropdown-header-style">
+                        <lightning-input type="search" label="Filter Items" onchange={handleFilter} 
+                                         placeholder="Type your search here" data-id={componentId}>
+                        </lightning-input>
+                        <div class="actions">
+                            <a href="javascript:void(0);" onclick={selectAll} data-id={componentId}>Select All</a>
+                            <a href="javascript:void(0);" onclick={clearAll} data-id={componentId}>Deselect All</a>
+                        </div>
+                    </div>
 
-			<!-- Below code is for Select/Clear All function -->
-			<div class="slds-grid slds-wrap">
-				<template if:true={showselectall}>
-					<div class="slds-col slds-large-size_10-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
-						<a href="javascript.void(0)" onclick={selectall}>Select All</a>
-					</div>
-					<div class="slds-col slds-large-size_2-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
-						<div class="slds-float_right">
-							<a href="javascript.void(0)" onclick={handleclearall}>Clear All</a>
-						</div>
-					</div>
-				</template>
-				<template if:false={showselectall}>
-					<div class="slds-col slds-large-size_10-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
-					</div>
-					<div class="slds-col slds-large-size_2-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
-						<div class="slds-float_right">
-							<a href="javascript.void(0)" onclick={handleclearall}>Clear All</a>
-						</div>
-					</div>
-				</template>
-			</div>
+                    <!-- Dropdown List -->
+                    <ul class="dropdown-list">
+                        <template for:each={rows} for:item="row">
+                            <li key={row.value} class={row.classes} data-id={componentId}>
+                                <lightning-input type="checkbox" checked={row.selected} label={row.label}
+                                                 value={row.value} onchange={handleSelectionChange} data-id={componentId}>
+                                </lightning-input>
+                            </li>
+                        </template>
+                    </ul>
 
-			<!-- Below code will show dropdown picklist -->
-			<template if:true={showDropdown}>
-				<div class="slds-box_border " style="width:100%">
-					<ul class="dropdown-list slds-dropdown_length-7 slds-var-p-left_medium">
-						<template for:each={filteredResults} for:item="profile">
-							<li key={profile.Id} class="dropdown-item">
-								<lightning-input type="checkbox" checked={profile.isChecked} label={profile.Name}
-									value={profile.Id} onchange={handleSelection}>
-								</lightning-input>
-							</li>
-						</template>
-					</ul>
-				</div>
-			</template>
-
-			<!-- Below code will show selected options from picklist in pills -->
-			<div class="selection-summary">
-				<div class="slds-var-p-around_x-small">
-					<template for:each={selectedItems} for:item="selectedItem">
-						<lightning-pill key={selectedItem.Id} label={selectedItem.Name} name={selectedItem.Id}
-							onremove={handleRemove}></lightning-pill>
-					</template>
-				</div>
-			</div>
-		</div>
-	</lightning-card>
+                    <!-- Dropdown Footer -->
+                    <div class="dropdown-footer-style">
+                        <lightning-button variant="brand" label="Apply" onclick={applySelection} 
+                                          class="slds-col slds-size_1-of-1" data-id={componentId}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
 </template>

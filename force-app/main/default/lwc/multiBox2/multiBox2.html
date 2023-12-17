@@ -1,0 +1,51 @@
+<template>
+    <lightning-card>
+        <div class="slds-var-m-left_large slds-var-m-right_large relative-position" onmouseleave={mousehandler}>
+
+            <!-- Search box now only displays selected items or placeholder -->
+            <lightning-input type="text" value={displayedValue}
+                onblur={blurhandler} onfocusout={focuhandler} onclick={clickhandler} 
+                placeholder={itemcounts} readonly
+                style="border: 1px solid #d8dde6; background-color: #ffffff; border-radius: .25rem; padding: 8px 12px;">
+            </lightning-input>
+
+            <!-- Dropdown with Header and Footer -->
+            <template if:true={showDropdown}>
+                <div class="absolute-position slds-box_border" style="width:100%; background-color: white;">
+
+                    <!-- Dropdown Header with inline styles -->
+                    <div style="padding: 0.75rem; border-bottom: 1px solid #dddbda;">
+                        <lightning-input type="search" label="Filter Items" onchange={handleFilter} 
+                                         placeholder="Type your search here" style="margin-bottom: 0.75rem;">
+                        </lightning-input>
+                        <div style="display: flex; justify-content: space-between;">
+                            <a href="javascript:void(0);" onclick={selectall} style="margin-right: 0.5rem;">Select All</a>
+                            <a href="javascript:void(0);" onclick={handleclearall}>Deselect All</a>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown List -->
+                    <ul class="dropdown-list slds-dropdown_length-7 slds-var-p-left_medium">
+                        <template for:each={filteredResults} for:item="profile">
+                            <li key={profile.Id} class="dropdown-item">
+                                <lightning-input type="checkbox" checked={profile.isChecked} label={profile.Name}
+                                                 value={profile.Id} onchange={handleSelection}>
+                                </lightning-input>
+                            </li>
+                        </template>
+                    </ul>
+
+                    <!-- Dropdown Footer with inline styles -->
+                    <div style="justify-content: center; padding: 0.75rem; border-top: 1px solid #dddbda;">
+                        <lightning-button variant="brand" label="Apply" onclick={handleApply} 
+                                          style="width: 100%;">
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Removed: The section displaying selected items in pills as it will be shown in the input box -->
+
+        </div>
+    </lightning-card>
+</template>

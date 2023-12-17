@@ -1,0 +1,11 @@
+.relative-position {
+    position: relative;
+}
+
+.absolute-position {
+    position: absolute;
+    background-color: brandHeader;
+    z-index: 1000; /* Ensures it appears above other content */
+    top: spacingMedium; /* Aligns just below the search box */
+    left: spacingNone; 
+}
