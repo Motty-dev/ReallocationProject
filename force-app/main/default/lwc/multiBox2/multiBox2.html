@@ -1,12 +1,11 @@
 <template>
-    <lightning-card>
+    <div>
         <div class="slds-var-m-left_large slds-var-m-right_large relative-position" onmouseleave={mousehandler}>
 
             <!-- Search box now only displays selected items or placeholder -->
-            <lightning-input type="text" value={displayedValue}
+            <lightning-input type="text" value={displayedValue} label="Twstt"
                 onblur={blurhandler} onfocusout={focuhandler} onclick={clickhandler} 
-                placeholder={itemcounts} readonly
-                style="border: 1px solid #d8dde6; background-color: #ffffff; border-radius: .25rem; padding: 8px 12px;">
+                placeholder={itemcounts}>
             </lightning-input>
 
             <!-- Dropdown with Header and Footer -->
@@ -36,9 +35,14 @@
                     </ul>
 
                     <!-- Dropdown Footer with inline styles -->
-                    <div style="justify-content: center; padding: 0.75rem; border-top: 1px solid #dddbda;">
+                    <div style="height: 80px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center; 
+                                border-top: 1px solid #dddbda;">
                         <lightning-button variant="brand" label="Apply" onclick={handleApply} 
-                                          style="width: 100%;">
+                                          style="margin: 0;
+                                          position: absolute;">
                         </lightning-button>
                     </div>
                 </div>
@@ -47,5 +51,5 @@
             <!-- Removed: The section displaying selected items in pills as it will be shown in the input box -->
 
         </div>
-    </lightning-card>
+    </div>
 </template>

@@ -546,3 +546,4 @@ export default class ParentComponent extends LightningElement {
         </div>
     </lightning-card>
 </template>
+z-index: 1000;
