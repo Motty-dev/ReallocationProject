@@ -1,42 +1,162 @@
-import { LightningElement, track, api, wire } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 export default class MultiBox2 extends LightningElement {
 
     // API Variables
-    @api picklistInput = ["Sales Cloud", "Service Cloud", "Marketing Cloud", "Commerce Cloud", "App Cloud", "Einstein Analytics","Service Cloud", "Marketing Cloud", "Commerce Cloud", "App Cloud", "Einstein Analytics","Service Cloud", "Marketing Cloud", "Commerce Cloud", "App Cloud", "Einstein Analytics","Service Cloud", "Marketing Cloud", "Commerce Cloud", "App Cloud", "Einstein Analytics","Service Cloud", "Marketing Cloud", "Commerce Cloud", "App Cloud", "Einstein Analytics", "Community Cloud", "IOTCloud", "Force.com", "Salesforce For Fresher", "Salesforce"];
-    @api selectedItems = [];
+    @api componentId;              // Unique identifier for the component
+    @api options = [];             // Array of {label, value}
+    @api disabled = false;         // Controlled by the parent component
+    @api label;                    // Label for the combobox
+    @api placeholder = 'Select an option';
 
-    // Track Variables
-    @track allValues = []; // this will store end result or selected values from picklist
-    @track selectedObject = false;
-    @track valuesVal = undefined;
-    @track searchTerm = '';
-    @track showDropdown = false;
-    @track itemcounts = 'None Selected';
-    @track selectionlimit = 10;
-    @track showselectall = false;
-    @track errors;
+    @track filteredResults = [];    // Filtered options based on search
+    @track selectedItems = [];      // Selected item values
+    @track displayedValue = '';     // Displayed text in the input field
+    @track showDropdown = false;    // Flag to show/hide the dropdown
 
+    @track mouse = false;
+    @track blurred = false;
+    @track focus = false;
+    @track clickHandle = false;
+
+    
     connectedCallback() {
-        this.initializeValues();
+        this.initializeOptions();
+    }
+
+    initializeOptions() {
+        this.filteredResults = this.options.map((option, index) => ({
+            Id: index.toString(), // Or another unique identifier
+            Name: option.label,
+            isChecked: this.selectedItems.includes(option.value)
+        }));
+        console.log('Selected Items:', this.selectedItems);
+
     }
     
-    initializeValues() {
-        this.valuesVal = this.picklistInput.map((name, index) => ({
-            Id: index.toString(),
-            Name: name,
-            isChecked: this.selectedItems.some(item => item.Name === name)
+    handleSearch(event) {
+        const searchTerm = event.target.value.toLowerCase();
+        this.filteredResults = this.options
+            .filter(option => option.label.toLowerCase().includes(searchTerm))
+            .map(option => ({
+                ...option,
+                isChecked: this.selectedItems.includes(option.value)
+            }));
+    }
+
+    handleSelection(event) {
+        const selectedValue = event.target.value;
+        const isSelected = event.target.checked;
+
+        // Update isChecked property of the profile
+        this.filteredResults = this.filteredResults.map(option => {
+            if (option.Id === selectedValue) {
+                option.isChecked = isSelected;
+            }
+            return option;
+        });
+
+        // Update selectedItems based on isChecked
+        this.selectedItems = this.filteredResults.filter(option => option.isChecked).map(option => option.Id);
+        this.updateDisplayedValue();
+        console.log('Selected Items:', this.selectedItems);
+    }
+    
+
+    updateDisplayedValue() {
+        this.displayedValue = this.selectedItems.length > 0
+            ? this.selectedItems.map(value => this.options.find(option => option.value === value)?.label).join(', ')
+            : this.placeholder;
+
+        console.log('Selected Items:', this.selectedItems);
+
+    }
+
+    updateFilteredResults() {
+        this.filteredResults = this.options.map(option => ({
+            ...option,
+            isChecked: this.selectedItems.includes(option.value)
         }));
     }
-    
-    
-    //this function is used to show the dropdown list
-    get filteredResults() {
-        // This getter now just filters based on the searchTerm and does not alter the isChecked state.
-        return this.valuesVal.filter(profile =>
-            profile.Name.toLowerCase().includes(this.searchTerm.toLowerCase())
-        );
+
+    handleApply() {
+        this.dispatchEvent(new CustomEvent('selectionchange', {
+            detail: { 
+                componentId: this.componentId, 
+                selectedValues: this.selectedItems 
+            }
+        }));
     }
-    
+
+    selectAll() {
+        this.filteredResults.forEach(option => option.isChecked = true);
+        this.selectedItems = this.filteredResults.map(option => option.Id);
+        this.updateDisplayedValue();
+    }
+
+    deselectAll() {
+        this.filteredResults.forEach(option => option.isChecked = false);
+        this.selectedItems = [];
+        this.updateDisplayedValue();
+    }
+
+    toggleDropdown() {
+        this.showDropdown = !this.showDropdown;
+    }
+
+    closeDropdown() {
+        this.showDropdown = false;
+    }   
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // clickhandler(event) {
+    //     this.mouse = false;
+    //     this.showDropdown = true;
+    //     this.clickHandle = true;
+    //     this.showselectall = true;
+    // }
+
+    // mousehandler(event) {
+    //     this.mouse = true;
+    //     this.dropdownClose();
+    // }
+
+    // blurhandler(event) {
+    //     this.blurred = true;
+    //     this.dropdownClose();
+    // }
+
+    // focuhandler(event) {
+    //     this.focus = true;
+    // }
+
+    // dropdownClose() {
+    //     if (this.mouse == true && this.blurred == true && this.focus == true) {
+    //         this.searchTerm = '';
+    //         this.showDropdown = false;
+    //         this.clickHandle = false;
+    //     }
+    // }
+
+
     // get filteredResults() {
     //     //copying data from parent component to local variables
     //     if (this.valuesVal == undefined) {
@@ -76,38 +196,7 @@ export default class MultiBox2 extends LightningElement {
     // }
 
     //this function is used to filter/search the dropdown list based on user input
-    handleSearch(event) {
-        this.searchTerm = event.target.value;
-        this.showDropdown = true;
-        this.mouse = false;
-        this.focus = false;
-        this.blurred = false;
-        if (this.selectedItems.length != 0) {
-            if (this.selectedItems.length >= this.selectionlimit) {
-                this.showDropdown = false;
-            }
-        }
-    }
 
-    //this function is used when user check/uncheck/selects (✓) an item in dropdown picklist
-    handleSelection(event) {
-        const selectedProfileId = event.target.value;
-        const isChecked = event.target.checked;
-        
-        // Update the isChecked property of the profile
-        this.valuesVal = this.valuesVal.map(profile => {
-            if (profile.Id === selectedProfileId) {
-                profile.isChecked = isChecked;
-            }
-            return profile;
-        });
-    
-        // Update selectedItems based on isChecked
-        this.selectedItems = this.valuesVal.filter(profile => profile.isChecked);
-    
-        // Update displayed value
-        this.displayedValue = this.selectedItems.map(item => item.Name).join(', ');
-    }
     
     // handleSelection(event) {
     //     const selectedProfileId = event.target.value;
@@ -179,79 +268,7 @@ export default class MultiBox2 extends LightningElement {
     // }
     
 
-    //custom function used to close/open dropdown picklist
-    clickhandler(event) {
-        this.mouse = false;
-        this.showDropdown = true;
-        this.clickHandle = true;
-        this.showselectall = true;
-    }
-
-    //custom function used to close/open dropdown picklist
-    mousehandler(event) {
-        this.mouse = true;
-        this.dropdownclose();
-    }
-
-    //custom function used to close/open dropdown picklist
-    blurhandler(event) {
-        this.blurred = true;
-        this.dropdownclose();
-    }
-
-    //custom function used to close/open dropdown picklist
-    focuhandler(event) {
-        this.focus = true;
-    }
-
-    //custom function used to close/open dropdown picklist
-    dropdownclose() {
-        if (this.mouse == true && this.blurred == true && this.focus == true) {
-            this.searchTerm = '';
-            this.showDropdown = false;
-            this.clickHandle = false;
-        }
-    }
-
-    //this function is invoked when user deselect/remove (✓) items from dropdown picklist
-    handleRemove(event) {
-        const valueRemoved = event.target.name;
-        this.selectedItems = this.selectedItems.filter(profile => profile.Id !== valueRemoved);
-        this.allValues.splice(this.allValues.indexOf(valueRemoved), 1);
-        this.itemcounts = this.selectedItems.length > 0 ? `${this.selectedItems.length} options selected` : 'None Selected';
-        this.errormessage();
-
-        if (this.itemcounts == 'None Selected') {
-            this.selectedObject = false;
-        } else {
-            this.selectedObject = true;
-        }
-    }
-
-    //this function is used to deselect/uncheck (✓) all of the items in dropdown picklist
-
-    // This function should uncheck all checkboxes and clear the displayed names
-    selectall(event) {
-        event.preventDefault();
-        this.selectedItems = [...this.valuesVal];
-        this.displayedValue = this.selectedItems.map(item => item.Name).join(', ');
     
-        // Mark all as checked
-        this.valuesVal.forEach(item => {
-            item.isChecked = true;
-        });
-    }
-    
-    handleclearall(event) {
-        event.preventDefault();
-        this.selectedItems = [];
-        this.displayedValue = 'None Selected';
-    
-        // Mark all as unchecked
-        this.valuesVal.forEach(item => {
-            item.isChecked = false;
-        });
-    }
     
     // selectall(event) {
     //     event.preventDefault();
@@ -284,26 +301,7 @@ export default class MultiBox2 extends LightningElement {
     // }
     
 
-    errormessage() {
-        this.errors = {
-            "Search Objects": "Maximum of " + this.selectionlimit + " items can be selected",
-        };
-        this.template.querySelectorAll("lightning-input").forEach(item => {
-            let label = item.label;
-            if (label == 'Search Objects') {
-
-            // if selected items list crosses selection limit, it will through custom error
-                if (this.selectedItems.length >= this.selectionlimit) {
-                    item.setCustomValidity(this.errors[label]);
-                } else {
-                //else part will clear the error
-                    item.setCustomValidity("");
-                }
-                item.reportValidity();
-            }
-        });
-    }
-}
+    
 
 
     // selectall(event) {

@@ -4,6 +4,23 @@ import getStores from '@salesforce/apex/StoreService.getStores';
 import getOwners from '@salesforce/apex/UserService.getOwners';
 
 export default class SingleReallocation extends LightningElement {
+
+    @track yourOptions = [
+        { label: 'Option 1', value: '1' },
+        { label: 'Option 2', value: '2' },
+        { label: 'Option 3', value: '3' },
+        { label: 'Option 4', value: '4' },
+        { label: 'Option 5', value: '5' },
+        // Add more options as needed
+    ];
+
+    handleSelectionChange(event) {
+        // Handle the selection change logic
+        const selectedValues = event.detail.selectedValues;
+        console.log('Selected values:', selectedValues);
+    }
+
+
     @track countries;
     @track stores;
     @track owners;

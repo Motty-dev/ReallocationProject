@@ -1,8 +1,13 @@
 <template>
   <div class="slds-card">
       <!-- Header Section -->
-      <c-header-card title="Select Main SA -- TEST --" icon-name="utility:insert_tag_field"></c-header-card>
-      
+        <c-header-card
+                    h2="Select Main SA ------ TEST -------"
+                    icon-name="utility:chevronright"
+                    icon-size="small"
+                    background-color="#F4F6F9">
+        </c-header-card>
+    
       <!-- Flexbox Container -->
       <div class="container">
 
@@ -22,14 +27,13 @@
               </c-multi-box>
           </div>
 
-          
+
         <!-- Custom Combobox for SA Boutique -->
           <div class="flex-item">
             <c-multi-box component-id="uniqueId1"
-                                label="Country"
-                                placeholder="Select Countries"
-                                options={countryOptions}
-                                onselectionchange={handleSelectionChange}>
+                        label="Select Options"
+                        options={yourOptions}
+                        onselectionchange={handleSelectionChange}>>
             </c-multi-box>
           </div>
 

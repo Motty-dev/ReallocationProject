@@ -1,14 +1,13 @@
 <template>
-    <div class="slds-card__header slds-grid">
-      <header class="slds-media slds-media_center slds-has-flexi-truncate">
-        <div class="slds-media__figure">
-            <lightning-icon if={iconName} icon-name={iconName} size="small"></lightning-icon>
-        </div>
-        <div class="slds-media__body">
-          <h2 class="slds-card__header-title">
-            {title} 
-          </h2>
-        </div>
-      </header>
-    </div>
+  <div class={headerClass} style="border-radius: 1rem; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);">
+    <header class="slds-media">
+      <div class="slds-media__figure slds-align-middle">
+        <lightning-icon icon-name={iconName} size={iconSize}></lightning-icon>
+      </div>
+      <div class="slds-media__body slds-align-middle">
+        <div if:true={h1} class="slds-card__header-title">{h1}</div>
+        <div if:false={h1} class="slds-card__header-title">{h2}</div>
+      </div>
+    </header>
+  </div>
 </template>
