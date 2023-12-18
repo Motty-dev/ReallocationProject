@@ -1,44 +1,55 @@
 <template>
-    <lightning-card>
-        <div class="slds-var-m-left_large slds-var-m-right_large relative-position" onmouseleave={mouseLeaveHandler} data-id={componentId}>
-            <!-- Modified input to show selected values or placeholder -->
-            <lightning-input type="text" label={label} value={displayedValue}
-                onclick={clickHandler} placeholder={placeholder} readonly style="border: 1px solid #d8dde6; border-radius: 0.25rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+    <div>
+        <div class="slds-var-m-left_large slds-var-m-right_large relative-position" onmouseleave={mousehandler}>
+
+            <!-- Search box now only displays selected items or placeholder -->
+            <lightning-input type="text" value={displayedValue} label="Twstt"
+                onblur={blurhandler} onfocusout={focuhandler} onclick={clickhandler} 
+                placeholder={itemcounts}>
             </lightning-input>
 
             <!-- Dropdown with Header and Footer -->
             <template if:true={showDropdown}>
-                <div class="absolute-position slds-box_border dropdown-style">
-                    <!-- Dropdown Header -->
-                    <div class="dropdown-header-style">
+                <div class="absolute-position slds-box_border" style="width:100%; background-color: white;">
+
+                    <!-- Dropdown Header with inline styles -->
+                    <div style="padding: 0.75rem; border-bottom: 1px solid #dddbda;">
                         <lightning-input type="search" label="Filter Items" onchange={handleFilter} 
-                                         placeholder="Type your search here" data-id={componentId}>
+                                         placeholder="Type your search here" style="margin-bottom: 0.75rem;">
                         </lightning-input>
-                        <div class="actions">
-                            <a href="javascript:void(0);" onclick={selectAll} data-id={componentId}>Select All</a>
-                            <a href="javascript:void(0);" onclick={clearAll} data-id={componentId}>Deselect All</a>
+                        <div style="display: flex; justify-content: space-between;">
+                            <a href="javascript:void(0);" onclick={selectall} style="margin-right: 0.5rem;">Select All</a>
+                            <a href="javascript:void(0);" onclick={handleclearall}>Deselect All</a>
                         </div>
                     </div>
 
                     <!-- Dropdown List -->
-                    <ul class="dropdown-list">
-                        <template for:each={rows} for:item="row">
-                            <li key={row.value} class={row.classes} data-id={componentId}>
-                                <lightning-input type="checkbox" checked={row.selected} label={row.label}
-                                                 value={row.value} onchange={handleSelectionChange} data-id={componentId}>
+                    <ul class="dropdown-list slds-dropdown_length-7 slds-var-p-left_medium">
+                        <template for:each={filteredResults} for:item="profile">
+                            <li key={profile.Id} class="dropdown-item">
+                                <lightning-input type="checkbox" checked={profile.isChecked} label={profile.Name}
+                                                 value={profile.Id} onchange={handleSelection}>
                                 </lightning-input>
                             </li>
                         </template>
                     </ul>
 
-                    <!-- Dropdown Footer -->
-                    <div class="dropdown-footer-style">
-                        <lightning-button variant="brand" label="Apply" onclick={applySelection} 
-                                          class="slds-col slds-size_1-of-1" data-id={componentId}>
+                    <!-- Dropdown Footer with inline styles -->
+                    <div style="height: 80px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center; 
+                                border-top: 1px solid #dddbda;">
+                        <lightning-button variant="brand" label="Apply" onclick={handleApply} 
+                                          style="margin: 0;
+                                          position: absolute;">
                         </lightning-button>
                     </div>
                 </div>
             </template>
+
+            <!-- Removed: The section displaying selected items in pills as it will be shown in the input box -->
+
         </div>
-    </lightning-card>
+    </div>
 </template>

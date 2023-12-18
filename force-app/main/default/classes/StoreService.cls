@@ -7,4 +7,4 @@ public with sharing class StoreService {
                 GROUP BY Main_boutique__c, Main_boutique__r.Name, Main_boutique__r.Country__c
                 ORDER BY Main_boutique__r.Name];
     }
-}//AND Main_boutique__r.ISO_code__c IN :listCountry 
+}

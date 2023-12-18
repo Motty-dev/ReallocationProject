@@ -82,7 +82,6 @@ export default class MultiBox2 extends LightningElement {
     }
 
     //this function is used when user check/uncheck/selects (✓) an item in dropdown picklist
-
     handleSelection(event) {
         const selectedProfileId = event.target.value;
         const isChecked = event.target.checked;
@@ -95,8 +94,7 @@ export default class MultiBox2 extends LightningElement {
             return profile;
         });
 
-        this.valuesVal = updatedValuesVal; // Only update once with modified objects
-    
+        
         // Update selectedItems based on isChecked
         if (isChecked) {
             const selectedProfile = this.valuesVal.find(profile => profile.Id === selectedProfileId);
