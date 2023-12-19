@@ -5,14 +5,14 @@ import getOwners from '@salesforce/apex/UserService.getOwners';
 
 export default class SingleReallocation extends LightningElement {
 
-    @track yourOptions = [
-        { label: 'Option 1', value: '1' },
-        { label: 'Option 2', value: '2' },
-        { label: 'Option 3', value: '3' },
-        { label: 'Option 4', value: '4' },
-        { label: 'Option 5', value: '5' },
-        // Add more options as needed
-    ];
+    @track yourOptions = [];
+    //     { Name: 'Option 1', Id: '1' },
+    //     { Name: 'Option 2', Id: '2' },
+    //     { Name: 'Option 3', Id: '3' },
+    //     { Name: 'Option 4', Id: '4' },
+    //     { Name: 'Option 5', Id: '5' },
+    //     // Add more options as needed
+    // ];
 
     handleSelectionChange(event) {
         // Handle the selection change logic
@@ -30,24 +30,46 @@ export default class SingleReallocation extends LightningElement {
     @track isCountryDisabled = false;
     @track isStoreDisabled = true;
     @track isOwnerDisabled = true;
-    @track countryOptions = [
-        // Replace these with actual options you want to provide
-        { label: 'Australia', value: 'AU' },
-        { label: 'Canada', value: 'CA' },
-        // Add more options as needed...
-    ];
+    
 
     handleSelectionChange(event) {
         // Handle the selection change
         console.log('Selected values:', event.detail.values);
+        
+    }
+
+    onChangeCheckboxCountry(event) {
+        this.yourOptions[event.detail.index].isChecked = event.detail.checked;
+    }
+
+    handleSelectAllCountries() {
+        this.yourOptions.forEach(item => {
+            if(item.display) {
+                item.isChecked = true;
+            }
+        });
+    }
+
+    handleDeselectAllCountries() {
+        this.yourOptions.forEach(item => item.isChecked = false);
+    }
+
+    handleSearchCountry(event) {
+        this.yourOptions.forEach(item => {
+            item.display = item.Name.toLowerCase().includes(event.detail.search.toLowerCase())
+        });
     }
     @wire(getCountries)
     wiredCountries({ error, data }) {
         if (data) {
-            this.countries = data.map(country => ({ label: country.Name, value: country.Id }));
+            console.log('1',data);
+            this.yourOptions = data.map(country => ({ Name: country.Name, Id: country.Id, isChecked: false, display: true }));
+            console.log('2',JSON.parse(JSON.stringify(this.yourOptions)));
+            this.yourOptions.forEach(item => console.log(item));
         } else if (error) {
             // Handle error
         }
+        
     }
 
     handleCountryChange(event) {

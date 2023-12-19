@@ -5,7 +5,7 @@
 
             <!-- Search box now only displays selected items or placeholder -->
             <lightning-input type="text" 
-                            value={displayedValue} 
+                            value={tempDisplayedValues} 
                             label={label} 
                             onclick={toggleDropdown} 
                             placeholder={placeholder}>
@@ -14,42 +14,43 @@
             <!-- Dropdown with Header and Footer -->
             <template if:true={showDropdown}>
                 <div class="absolute-position slds-box_border" 
-                    style="width:100%; background-color: white;"
-                    onblur={closeDropdown}>
+                        style="width:100%; background-color: white; border-radius:5px"
+                        onblur={closeDropdown}>
 
                     <!-- Dropdown Header with inline styles -->
-                    <div style="padding: 0.75rem; border-bottom: 1px solid #dddbda;">
+                    <div style="padding: 5px; border-bottom: 1px solid #dddbda;">
                         <lightning-input type="search" 
-                                        label="Filter Items" 
-                                        onchange={handleFilter} 
-                                        placeholder="Search" 
-                                        style="margin-bottom: 0.75rem;">
+                                        onchange={handleSearch} 
+                                        placeholder="Type your search here" 
+                                        style="margin-bottom: 0.50rem; margin-left: 0.5rem; margin-right: 0.5rem;">
                         </lightning-input>
                         <div style="display: flex; justify-content: space-between;">
-                            <a href="javascript:void(0);" 
+                            <span 
                                 onclick={selectAll} 
-                                style="margin-right: 0.5rem;">Select All</a>
-                            <a href="javascript:void(0);" 
-                                onclick={deselectAll}>Deselect All</a>
+                                style="padding-left: 0.75rem; cursor: pointer;">Select All</span>
+                            <span 
+                                onclick={deselectAll}
+                                style="padding-right: 0.75rem; cursor: pointer;">Deselect All</span>
                         </div>
                     </div>
 
                     <!-- Dropdown List -->
-                    <ul class="dropdown-list slds-dropdown_length-7 slds-var-p-left_medium">
-                        <template for:each={filteredResults} for:item="option">
-                            <li key={option.Id} class="dropdown-item">
+                    <ul class="dropdown-list slds-dropdown_length-10 slds-var-p-left_medium">
+                        <template for:each={myOptions} for:item="option" for:index="index">
+                            <li if:true={option.display} key={option.Id} class="dropdown-item">
                                 <lightning-input type="checkbox" 
                                                 checked={option.isChecked} 
                                                 label={option.Name}
-                                                value={option.Id} 
-                                                onchange={handleSelection}>
+                                              
+                                                onchange={handleSelection}
+                                                data-index={index}>
                                 </lightning-input>
                             </li>
                         </template>
                     </ul>
 
                     <!-- Dropdown Footer with inline styles -->
-                    <div style="height: 80px; display: flex; justify-content: center; 
+                    <div style="height: 60px; display: flex; justify-content: center; border-radius: 5px;; 
                                 align-items: center; 
                                 border-top: 1px solid #dddbda;">
                         <lightning-button variant="brand" label="Apply" 

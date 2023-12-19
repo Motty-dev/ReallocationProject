@@ -1,18 +1,18 @@
 <template>
   <div class="slds-card">
-      <!-- Header Section -->
+      <!-- Header Section  -------------------------------------->
         <c-header-card
                     h2="Select Main SA ------ TEST -------"
                     icon-name="utility:chevronright"
                     icon-size="small"
-                    background-color="#F4F6F9">
+                    background-color="#FFEBEE">
         </c-header-card>
     
-      <!-- Flexbox Container -->
+      <!-- Flexbox Container ------------------------------------>
       <div class="container">
 
 
-        <!-- Custom Combobox for Country -->
+        <!-- Custom Combobox for Country ------------------------>
           <div class="flex-item">
             <c-multi-box>
 
@@ -20,24 +20,27 @@
           </div>
 
 
-        <!-- Custom Combobox for SA Boutique -->
+        <!-- Custom Combobox for SA Boutique -------------------->
           <div class="flex-item">
               <c-multi-box>
 
               </c-multi-box>
           </div>
 
-
-        <!-- Custom Combobox for SA Boutique -->
+        <!-- Custom Combobox for SA Boutique -------------------->
           <div class="flex-item">
             <c-multi-box component-id="uniqueId1"
                         label="Select Options"
                         options={yourOptions}
-                        onselectionchange={handleSelectionChange}>>
+                        onselectionchange={handleSelectionChange}
+                        onchangecountry={onChangeCheckboxCountry}
+                        onselectallcountries={handleSelectAllCountries}
+                        ondeselectallcountries={handleDeselectAllCountries}
+                        onsearchcountry={handleSearchCountry}>
             </c-multi-box>
           </div>
 
-          <!-- Search Button -->
+          <!-- Search Button ------------------------------------>
           <div class="flex-item">
             <lightning-button label="Search Clients" 
                             variant="brand"

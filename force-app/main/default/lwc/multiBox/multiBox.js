@@ -1,102 +1,155 @@
 import { LightningElement, track, api } from 'lwc';
-export default class MultiBox2 extends LightningElement {
+export default class MultiBox extends LightningElement {
 
     // API Variables
     @api componentId;              // Unique identifier for the component
-    @api options = [];             // Array of {label, value}
+    //@api options = [];             // Array of {Id ,Name, isChecked}
     @api disabled = false;         // Controlled by the parent component
     @api label;                    // Label for the combobox
     @api placeholder = 'Select an option';
 
-    @track filteredResults = [];    // Filtered options based on search
+    @track filteredResults = [];  // Filtered options based on search
     @track selectedItems = [];      // Selected item values
     @track displayedValue = '';     // Displayed text in the input field
-    @track showDropdown = false;    // Flag to show/hide the dropdown
+    @track showDropdown = false; 
+    @track selectedItemLabels = [];   // Flag to show/hide the dropdown
 
     @track mouse = false;
     @track blurred = false;
     @track focus = false;
     @track clickHandle = false;
 
-    
-    connectedCallback() {
-        this.initializeOptions();
+    // @api
+    // set options(value) {
+    //     this._options = value;
+    //     this.filteredResults = [...value]; // Initialize filtered result
+    //     console.log('Received options:', this._options);
+    // }
+    // get options() {
+    //     return this._options;
+    // }
+
+    @api options;
+
+
+    get myOptions() {
+        return this.options ? this.options : [];
     }
 
-    initializeOptions() {
-        this.filteredResults = this.options.map((option, index) => ({
-            Id: index.toString(), // Or another unique identifier
-            Name: option.label,
-            isChecked: this.selectedItems.includes(option.value)
-        }));
-        console.log('Selected Items:', this.selectedItems);
 
+    get tempDisplayedValues() {
+        const temp = this.myOptions.filter(item => item.isChecked).map(item => item.Name).join(', ');
+        return temp.length ? temp : '';
+    }
+
+    get tempSelectedItems() {
+        return this.myOptions.filter(item => item.isChecked).map(item => item.Id);
     }
     
     handleSearch(event) {
-        const searchTerm = event.target.value.toLowerCase();
-        this.filteredResults = this.options
-            .filter(option => option.label.toLowerCase().includes(searchTerm))
-            .map(option => ({
-                ...option,
-                isChecked: this.selectedItems.includes(option.value)
-            }));
+        console.log(event.target.value);
+        // const searchTerm = event.target.value.toLowerCase();
+        // this.filteredResults = this.options
+        //     .filter(option => option.Name.toLowerCase().includes(searchTerm))
+        //     .map(option => ({
+        //         ...option,
+        //         isChecked: this.selectedItems.includes(option.Id)
+        //     }));
+
+        this.dispatchEvent(new CustomEvent('searchcountry', {
+            detail: {
+                search: event.target.value
+            }
+        }))
     }
 
     handleSelection(event) {
         const selectedValue = event.target.value;
         const isSelected = event.target.checked;
 
-        // Update isChecked property of the profile
-        this.filteredResults = this.filteredResults.map(option => {
-            if (option.Id === selectedValue) {
-                option.isChecked = isSelected;
-            }
-            return option;
-        });
+        const index = event.target.dataset.index;
+        console.log('index', index);
+        console.log('checked', event.target.checked);
+        console.log('value', event.target.value);
 
+        this.dispatchEvent(new CustomEvent('changecountry', {
+            detail: {
+                index: index,
+                checked: isSelected
+            }
+        }));
+        // const { index } = event.target.dataset;
+    
+        // Update isChecked property of the options
+        // this.options = this.options.map(option => 
+        //     option.Id === selectedValue ? { ...option, isChecked: isSelected } : option
+        // );
+
+        // console.log('this.filteredResults[index].Name', JSON.stringify(this.filteredResults[index]));
+        // this.filteredResults[index].isChecked = isSelected;
+        // this.filteredResults = [...this.filteredResults];
+
+        // let temp = [...this.filteredResults];
+        // console.log('this.filteredResults[index].Name temp', JSON.stringify(temp[index]));
+        // temp[index]["isChecked"] = isSelected;
+        // this.filteredResults = temp;
+        console.log('i am here')
+
+        // this.filteredResults.forEach((item, key) => {
+        //     if(key == index) {
+        //         item.isChecked = isSelected;
+        //     }
+        // })
+        
+    
         // Update selectedItems based on isChecked
-        this.selectedItems = this.filteredResults.filter(option => option.isChecked).map(option => option.Id);
-        this.updateDisplayedValue();
-        console.log('Selected Items:', this.selectedItems);
+        // this.selectedItems = this.options.filter(option => option.isChecked).map(option => option.Id);
+        // this.updateDisplayedValue();
     }
     
+    
+    
 
-    updateDisplayedValue() {
-        this.displayedValue = this.selectedItems.length > 0
-            ? this.selectedItems.map(value => this.options.find(option => option.value === value)?.label).join(', ')
-            : this.placeholder;
-
-        console.log('Selected Items:', this.selectedItems);
-
-    }
+    // updateDisplayedValue() {
+    //     this.displayedValue = this.selectedItems.length > 0
+    //         ? this.selectedItems.map(selectedId => this.options.find(option => option.Id === selectedId)?.Name).join(', ')
+    //         : this.placeholder;
+    // }
 
     updateFilteredResults() {
         this.filteredResults = this.options.map(option => ({
             ...option,
-            isChecked: this.selectedItems.includes(option.value)
+            isChecked: this.selectedItems.includes(option.Id)
         }));
     }
 
     handleApply() {
+        console.log('Selected Values:', this.selectedItems);
         this.dispatchEvent(new CustomEvent('selectionchange', {
             detail: { 
                 componentId: this.componentId, 
-                selectedValues: this.selectedItems 
+                selectedValues: this.tempSelectedItems 
             }
         }));
+        console.log("selectedItems:",JSON.stringify(this.selectedItems));
+        console.log("tempSelectedItems:",JSON.stringify(this.tempSelectedItems));
     }
 
     selectAll() {
-        this.filteredResults.forEach(option => option.isChecked = true);
-        this.selectedItems = this.filteredResults.map(option => option.Id);
-        this.updateDisplayedValue();
+        console.log('select');
+
+        this.dispatchEvent(new CustomEvent('selectallcountries'));
+        // this.filteredResults.forEach(option => option.isChecked = true);
+        // this.selectedItems = this.filteredResults.map(option => option.Id);
+        // this.updateDisplayedValue();
     }
 
     deselectAll() {
-        this.filteredResults.forEach(option => option.isChecked = false);
-        this.selectedItems = [];
-        this.updateDisplayedValue();
+
+        this.dispatchEvent(new CustomEvent('deselectallcountries'));
+        // this.filteredResults.forEach(option => option.isChecked = false);
+        // this.selectedItems = [];
+        // this.updateDisplayedValue();
     }
 
     toggleDropdown() {
@@ -107,6 +160,7 @@ export default class MultiBox2 extends LightningElement {
         this.showDropdown = false;
     }   
 }
+
 
 
 
