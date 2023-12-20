@@ -1,8 +1,8 @@
 import { LightningElement, track } from 'lwc';
-import getCountries from '@salesforce/apex/CountryService.getCountries';
-import getStores from '@salesforce/apex/StoreService.getStores';
-import getOwners from '@salesforce/apex/UserService.getOwners';
-import getAccounts from '@salesforce/apex/AccountService.getAccounts';
+import getCountries from '@salesforce/apex/SingleReallocationService.getCountries';
+import getStores from '@salesforce/apex/SingleReallocationService.getStores';
+import getOwners from '@salesforce/apex/SingleReallocationService.getOwners';
+import getAccounts from '@salesforce/apex/SingleReallocationService.getAccounts';
 
 export default class TestApexMethods extends LightningElement {
     @track data;

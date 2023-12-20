@@ -1,6 +1,8 @@
 <template>
     <div class="slds-card">
+
         <!-- Header Section -->
+        
         <c-header-card h2="Select Main SA" 
                         icon-name="utility:chevronright"
                         icon-size="small"
@@ -9,36 +11,54 @@
         
         <!-- Flexbox Container -->
         <div class="container">
+
             <!-- Custom Combobox for Country -->
+
             <div class="flex-item">
-                <c-custom-combobox name="country"
-                                   label="Country"
-                                   options={countryOptions}
-                                   value={selectedCountry}
-                                   onvaluechange={handleComboboxChange}>
-                </c-custom-combobox>
+                <c-multi-box component-id="countriesBox1"
+                        label="Country"
+                        placeholder="All Countries"
+                        options={countriesData}
+                        onclickapply={handleClickApplyCountries}
+                        onchangebox={onChangeCheckboxCountries}
+                        onselectall={handleSelectAllCountries}
+                        ondeselectall={handleDeselectAllCountries}
+                        onsearchbox={handleSearchCountry}>
+            </c-multi-box>
             </div>
             
             <!-- Custom Combobox for SA Boutique -->
+
             <div class="flex-item">
-                <c-custom-combobox name="saBoutique"
-                                   label="SA Boutique"
-                                   options={saBoutiqueOptions}
-                                   value={selectedSaBoutique}
-                                   onvaluechange={handleComboboxChange}>
-                </c-custom-combobox>
+                <c-multi-box component-id="stroesBox2"
+                        label="SA Boutique"
+                        placeholder="All Boutiques"
+                        options={storesData}
+                        onclickapply={handleClickApplyStores}
+                        onchangebox={onChangeCheckboxStore}
+                        onselectall={handleSelectAllStores}
+                        ondeselectall={handleDeselectAllStores}
+                        onsearchbox={handleSearchStore}>
+            </c-multi-box>
             </div>
   
             <!-- Custom Combobox for Main SA -->
+
             <div class="flex-item">
-                <c-custom-combobox name="mainSa"
-                                   label="Main SA"
-                                   options={mainSaOptions}
-                                   value={selectedMainSa}
-                                   onvaluechange={handleComboboxChange}>
-                </c-custom-combobox>
+                <c-multi-box component-id="ownersBox3"
+                        label="Main SA"
+                        placeholder="All SAs"
+                        options={countryData}
+                        onclickapply={handleSelectionChange}
+                        onchangebox={onChangeCheckboxCountry}
+                        onselectall={handleSelectAllCountries}
+                        ondeselectall={handleDeselectAllCountries}
+                        onsearchbox={handleSearchCountry}>
+            </c-multi-box>
             </div>
+
             <!-- Search Button -->
+
             <div class="flex-item">
                 <lightning-button label="Search Clients" 
                                   variant="brand"

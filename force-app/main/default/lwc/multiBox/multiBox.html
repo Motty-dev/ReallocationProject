@@ -1,23 +1,24 @@
 <template>
-    <div>
-        <div class="slds-var-m-left_large slds-var-m-right_large relative-position" 
-            onmouseleave={mousehandler}>
+        <div class="relative-position">
 
             <!-- Search box now only displays selected items or placeholder -->
+
             <lightning-input type="text" 
-                            value={tempDisplayedValues} 
+                            value={displayedValues} 
                             label={label} 
                             onclick={toggleDropdown} 
                             placeholder={placeholder}>
             </lightning-input>
 
             <!-- Dropdown with Header and Footer -->
+
             <template if:true={showDropdown}>
                 <div class="absolute-position slds-box_border" 
                         style="width:100%; background-color: white; border-radius:5px"
                         onblur={closeDropdown}>
 
                     <!-- Dropdown Header with inline styles -->
+
                     <div style="padding: 5px; border-bottom: 1px solid #dddbda;">
                         <lightning-input type="search" 
                                         onchange={handleSearch} 
@@ -35,13 +36,13 @@
                     </div>
 
                     <!-- Dropdown List -->
+
                     <ul class="dropdown-list slds-dropdown_length-10 slds-var-p-left_medium">
                         <template for:each={myOptions} for:item="option" for:index="index">
                             <li if:true={option.display} key={option.Id} class="dropdown-item">
                                 <lightning-input type="checkbox" 
                                                 checked={option.isChecked} 
                                                 label={option.Name}
-                                              
                                                 onchange={handleSelection}
                                                 data-index={index}>
                                 </lightning-input>
@@ -50,6 +51,7 @@
                     </ul>
 
                     <!-- Dropdown Footer with inline styles -->
+
                     <div style="height: 60px; display: flex; justify-content: center; border-radius: 5px;; 
                                 align-items: center; 
                                 border-top: 1px solid #dddbda;">
@@ -61,5 +63,4 @@
                 </div>
             </template>
         </div>
-    </div>
 </template>

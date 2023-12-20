@@ -28,8 +28,12 @@ export default class SingleReallocation extends LightningElement {
     @track selectedStore;
     @track selectedOwner;
     @track isCountryDisabled = false;
-    @track isStoreDisabled = true;
     @track isOwnerDisabled = true;
+    @track isStoreDisabled = true;
+    
+    
+
+
     
 
     handleSelectionChange(event) {
