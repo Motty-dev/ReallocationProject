@@ -7,7 +7,8 @@
                             value={displayedValues} 
                             label={label} 
                             onclick={toggleDropdown} 
-                            placeholder={placeholder}>
+                            placeholder={placeholder}
+                            disabled={isDisabled}>
             </lightning-input>
 
             <!-- Dropdown with Header and Footer -->
@@ -15,7 +16,8 @@
             <template if:true={showDropdown}>
                 <div class="absolute-position slds-box_border" 
                         style="width:100%; background-color: white; border-radius:5px"
-                        onblur={closeDropdown}>
+                        onblur={closeDropdown}
+                        onmouseleave={closeDropdown}>
 
                     <!-- Dropdown Header with inline styles -->
 

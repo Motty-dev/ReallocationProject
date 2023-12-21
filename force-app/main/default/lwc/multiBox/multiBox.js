@@ -7,8 +7,9 @@ export default class MultiBox extends LightningElement {
     @api options; 
     @api componentId;                     
     @api placeholder;
-    @api disabled = false; 
     @track showDropdown = false; 
+    @api isinputenabled;
+
 
     get myOptions() {
         return this.options ? this.options : [];
@@ -22,6 +23,11 @@ export default class MultiBox extends LightningElement {
     get selectedItems() {
         return this.myOptions.filter(item => item.isChecked).map(item => item.Id);
     }
+
+    get isDisabled() {
+        return !this.isinputenabled;
+    }
+
 
     handleSelection(event) {
         
@@ -51,6 +57,7 @@ export default class MultiBox extends LightningElement {
                     selectedValues: this.selectedItems 
                 }
             }));
+            this.closeDropdown();
         }
 
         this.selectedItems.forEach(item => console.log(item))

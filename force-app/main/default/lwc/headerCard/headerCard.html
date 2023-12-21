@@ -5,8 +5,8 @@
         <lightning-icon icon-name={iconName} size={iconSize}></lightning-icon>
       </div>
       <div class="slds-media__body slds-align-middle">
-        <div if:true={h1} class="slds-card__header-title">{h1}</div>
-        <div if:false={h1} class="slds-card__header-title">{h2}</div>
+        <span if:true={h1} class="slds-card__header-title">{h1}</span>
+        <span if:false={h1} class="slds-card__header-title">{h2}</span>
       </div>
     </header>
   </div>

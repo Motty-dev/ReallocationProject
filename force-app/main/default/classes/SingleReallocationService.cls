@@ -28,4 +28,6 @@ public with sharing class SingleReallocationService {
                 WHERE Main_boutique__c IN :storesList  
                 GROUP BY Main_boutique__c, OwnerId, Owner.LastName, Owner.FirstName];
     }
+
+
 }

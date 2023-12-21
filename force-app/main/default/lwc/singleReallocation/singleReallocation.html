@@ -20,10 +20,11 @@
                         placeholder="All Countries"
                         options={countriesData}
                         onclickapply={handleClickApplyCountries}
-                        onchangebox={onChangeCheckboxCountries}
+                        onchangebox={changeCheckboxCountries}
                         onselectall={handleSelectAllCountries}
                         ondeselectall={handleDeselectAllCountries}
-                        onsearchbox={handleSearchCountry}>
+                        onsearchbox={handleSearchCountry}
+                        isinputenabled={inputEnabledFirst}>
             </c-multi-box>
             </div>
             
@@ -35,10 +36,11 @@
                         placeholder="All Boutiques"
                         options={storesData}
                         onclickapply={handleClickApplyStores}
-                        onchangebox={onChangeCheckboxStore}
+                        onchangebox={changeCheckboxStore}
                         onselectall={handleSelectAllStores}
                         ondeselectall={handleDeselectAllStores}
-                        onsearchbox={handleSearchStore}>
+                        onsearchbox={handleSearchStore}
+                        isinputenabled={inputEnabledSecond}>
             </c-multi-box>
             </div>
   
@@ -48,12 +50,13 @@
                 <c-multi-box component-id="ownersBox3"
                         label="Main SA"
                         placeholder="All SAs"
-                        options={countryData}
-                        onclickapply={handleSelectionChange}
-                        onchangebox={onChangeCheckboxCountry}
-                        onselectall={handleSelectAllCountries}
-                        ondeselectall={handleDeselectAllCountries}
-                        onsearchbox={handleSearchCountry}>
+                        options={ownersData}
+                        onclickapply={handleClickApplyOwners}
+                        onchangebox={changeCheckboxOwner}
+                        onselectall={handleSelectAllOwners}
+                        ondeselectall={handleDeselectAllOwners}
+                        onsearchbox={handleSearchOwner}
+                        isinputenabled={inputEnabledThird}>
             </c-multi-box>
             </div>
 
@@ -62,14 +65,31 @@
             <div class="flex-item">
                 <lightning-button label="Search Clients" 
                                   variant="brand"
-                                  onclick={handleSearch}>
+                                  onclick={handleButtonClick}
+                                  disabled={buttonEnabled}>
                 </lightning-button>
             </div>
         </div>
-        <c-header-card title="Results" 
+        <c-header-card h2="Results" 
                         icon-name="utility:chevronright"
                         icon-size="small"
                         background-color="#EBECF0">
         </c-header-card>
+
+        <!--Results and SA Panel-->
+        <div style="display: flex;">
+
+            <!-- Results table container with 85% width -->
+            <div style="width: 85%; border: 5px;">
+                <!-- Insert your results table component here -->
+                <c-single-reallocation-result></c-single-reallocation-result>
+            </div>
+            
+            <!-- SA Panel container with 15% width -->
+            <div style="width: 15%; border: 5px;">
+                <!-- Insert your SA panel component here -->
+                <c-single-reallocation-sa-panel></c-single-reallocation-sa-panel>
+            </div>
+        </div>
     </div>
 </template>
