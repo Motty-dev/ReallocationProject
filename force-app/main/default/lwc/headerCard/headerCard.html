@@ -1,12 +1,12 @@
 <template>
-  <div class={headerClass} style="border: 1px; border-radius: 0.45rem; box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);">
+  <div class={headerClass} style="border:1px; border-radius: 5px; box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1); padding: 10px; margin: 4px">
     <header class="slds-media">
       <div class="slds-media__figure slds-align-middle">
         <lightning-icon icon-name={iconName} size={iconSize}></lightning-icon>
       </div>
       <div class="slds-media__body slds-align-middle">
-        <span if:true={h1} class="slds-card__header-title">{h1}</span>
-        <span if:false={h1} class="slds-card__header-title">{h2}</span>
+        <span if:true={h1}>{h1}</span>
+        <span if:false={h1}>{h2}</span>
       </div>
     </header>
   </div>

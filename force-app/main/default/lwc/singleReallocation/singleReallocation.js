@@ -5,7 +5,8 @@ import getOwners from '@salesforce/apex/UserService.getOwners';
 import getAccounts from '@salesforce/apex/SingleReallocationService.getAccounts';
 
 export default class SingleReallocation extends LightningElement {
-  
+    @api recordId;
+
     @track storesData = [];           
     @track ownersData = [];
     @track countriesData = []; 
@@ -19,6 +20,21 @@ export default class SingleReallocation extends LightningElement {
     @track inputEnabledSecond = false;
     @track inputEnabledThird = false;
     @track buttonEnabled = true;
+
+
+    @track columns = [
+        { label: 'Client Name', fieldName: 'clientName'},
+        { label: 'Client ID', fieldName: 'Id'},
+        { label: 'Segment', fieldName: 'Segment__c'},
+        { label: 'Current Main Boutique', fieldName: 'boutiqueName'},
+        { label: 'Current Main SA', fieldName: 'ownerFullName'}
+    ];
+
+    @track isLoading = false;
+    limitSize = 50;
+    offsetSize = 0;
+    
+    //TODO: dataMap = [this.storesData, this.ownersData, this.countriesData]; to make the functions more generic
     
     // Country Controllers =================================================================================>>>>
 
@@ -145,13 +161,44 @@ export default class SingleReallocation extends LightningElement {
     // Customers Controllers =================================================================================>>>>
 
     handleButtonClick(event) {
+
+        this.accountsData = [];
+        this.offsetSize = 0;
+        //this.loadMoreData(); when loadmore is ready
+         
         getAccounts({ listOwners: this.selectedOwners })
-            .then(result => {
-                this.accountsData = result;
-                console.log(JSON.stringify(this.accountsData)); // Display data in console
+            .then(data => {
+                console.log(JSON.stringify(data));
+                this.accountsData = data.map(customer => ({ Id: customer.Id, ownerFullName: customer.Owner.FirstName + ' ' + customer.Owner.LastName,
+                            boutiqueName: customer.Main_boutique__r.Name,
+                            clientName: customer.Name,
+                            Segment__c: customer.Segment__c,
+                            isChecked: false, display: true }));
             })
             .catch(error => {
                 console.error('Error:', error);
             });
+    }
+
+    loadMoreData() {
+        this.isLoading = true;
+        apexMethod({listOwners: this.selectedOwners, limitSize: this.limitSize, offsetSize: this.offsetSize })
+            .then(result => {
+                this.data = [...this.data, ...result];
+                this.offsetSize = this.data.length;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                this.isLoading = false;
+            });
+    }
+
+    handleScroll(event) {
+        const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
+        if (bottom) {
+            this.loadMoreData();
+        }
     }
 }

@@ -1,3 +1,4 @@
+<!-- sldsValidatorIgnore -->
 <template>
     <div class="slds-card">
 
@@ -15,7 +16,7 @@
             <!-- Custom Combobox for Country -->
 
             <div class="flex-item">
-                <c-multi-box component-id="countriesBox1"
+                <c-multi-box component-id="1"
                         label="Country"
                         placeholder="All Countries"
                         options={countriesData}
@@ -31,7 +32,7 @@
             <!-- Custom Combobox for SA Boutique -->
 
             <div class="flex-item">
-                <c-multi-box component-id="stroesBox2"
+                <c-multi-box component-id="2"
                         label="SA Boutique"
                         placeholder="All Boutiques"
                         options={storesData}
@@ -47,7 +48,7 @@
             <!-- Custom Combobox for Main SA -->
 
             <div class="flex-item">
-                <c-multi-box component-id="ownersBox3"
+                <c-multi-box component-id="3"
                         label="Main SA"
                         placeholder="All SAs"
                         options={ownersData}
@@ -77,19 +78,19 @@
         </c-header-card>
 
         <!--Results and SA Panel-->
-        <div style="display: flex;">
 
-            <!-- Results table container with 85% width -->
-            <div style="width: 85%; border: 5px;">
-                <!-- Insert your results table component here -->
-                <c-single-reallocation-result></c-single-reallocation-result>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <div style="display: flex; gap: 20px;">
+            <div style="width: 80%;  padding: 20px; background-color: white; box-sizing: border-box;">
+                <c-single-reallocation-result columns={columns} accounts-data={accountsData}></c-single-reallocation-result>
             </div>
-            
-            <!-- SA Panel container with 15% width -->
-            <div style="width: 15%; border: 5px;">
-                <!-- Insert your SA panel component here -->
+            <div style="width: 20%; border: 1px solid black; padding: 20px; background-color: green; box-sizing: border-box;">
                 <c-single-reallocation-sa-panel></c-single-reallocation-sa-panel>
             </div>
         </div>
+
     </div>
 </template>

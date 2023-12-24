@@ -1,67 +1,35 @@
-<!-- results.html -->
+<!-- sldsValidatorIgnore -->
 <template>
-    <article class="slds-card">
-        <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                <div class="slds-media__figure">
-                    <span class="slds-icon_container slds-icon-standard-contact" title="description of icon when needed">
-                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                            <!-- You would use an actual SVG icon here -->
-                            <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#contact"></use>
-                        </svg>
-                    </span>
+            <div class="singleReallocationResult__filters">
+                <lightning-input type="search" placeholder="Search By Client's Name or Client's ID" style="width: 20%;" variant="label-hidden"></lightning-input>
+                <div style="width: 75%; background-color: white;">
+                    <div class="filters-container" style="display: flex; justify-content: space-between;">
+                        <!-- Filter icon -->
+                        <div class="filter-icon-label">
+                            <lightning-icon icon-name="utility:filter" alternative-text="Filters" size="medium"></lightning-icon>
+                            <span class="filter-text">Filters</span>
+                        </div> 
+                        <div class="picklists">
+
+                            <!-- Picklist for Main Address's Countries -->
+                            <lightning-combobox name="countryFilter" class="picklist1" variant="label-hidden" placeholder="Main Address's Countries" options={countryOptions} onchange={handleCountryChange} style="min-width: 50px;"></lightning-combobox>
+                
+                            <!-- Picklist for Client's Main Boutiques -->
+                            <lightning-combobox name="boutiqueFilter" class="picklist2" variant="label-hidden" placeholder="client's Main Boutiques" options={boutiqueOptions} onchange={handleBoutiqueChange}></lightning-combobox>
+                            
+                            <!-- Picklist for Client Segments -->
+                            <lightning-combobox name="segmentFilter" class="picklist3" variant="label-hidden" placeholder="client Segments" options={segmentOptions} onchange={handleSegmentChange}></lightning-combobox>
+                        </div>
+                    </div>
                 </div>
-                <div class="slds-media__body" style="border: 5px;">
-                    <h2 class="slds-card__header-title">
-                        <span>Results</span>
-                    </h2>
-                </div>
-            </header>
-        </div>
-        <div class="slds-card__body slds-card__body_inner">
-            <div class="slds-var-p-around_medium">
-                <lightning-input type="search" 
-                                label="Search by Client Name or Cli" 
-                                class="slds-var-m-bottom_small"
-                                variant="label-hidden"
-                                placeholder="Search by Client Name or Cli">
-                </lightning-input>
             </div>
-            <div class="slds-table_header-fixed_container slds-border_top">
-                <table class="slds-table slds-table_fixed-layout slds-table_bordered slds-table_resizable-cols" 
-                       role="grid">
-                    <thead>
-                        <tr class="slds-line-height_reset">
-                            <th class="" scope="col">
-                                <div class="slds-truncate" title="Client Name">Client Name</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate" title="Client ID">Client ID</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate" title="CurrentSeg...">CurrentSeg...</div>
-                            </th>
-                            <!-- Add other headers based on your data structure -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template for:each={data} for:item="row">
-                            <tr class="slds-hint-parent" key={row.Id}>
-                                <td data-label="Client Name">
-                                    <div class="slds-truncate" title={row.ClientName}>{row.ClientName}</div>
-                                </td>
-                                <td data-label="Client ID">
-                                    <div class="slds-truncate" title={row.ClientId}>{row.ClientId}</div>
-                                </td>
-                                <td data-label="CurrentSeg...">
-                                    <div class="slds-truncate" title={row.CurrentSeg}>{row.CurrentSeg}</div>
-                                </td>
-                                <!-- Add other data cells based on your data structure -->
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
+            <div class="singleReallocationResult__table" style="height: 450px;">
+                <lightning-datatable
+                    key-field="Id"
+                    data={accountsData}
+                    show-row-number-column
+                    columns={columns}>
+                </lightning-datatable>
             </div>
-        </div>
-    </article>
+           
 </template>
