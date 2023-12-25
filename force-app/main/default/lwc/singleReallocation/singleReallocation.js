@@ -5,7 +5,6 @@ import getOwners from '@salesforce/apex/UserService.getOwners';
 import getAccounts from '@salesforce/apex/SingleReallocationService.getAccounts';
 
 export default class SingleReallocation extends LightningElement {
-    @api recordId;
 
     @track storesData = [];           
     @track ownersData = [];
@@ -19,9 +18,9 @@ export default class SingleReallocation extends LightningElement {
     @track inputEnabledFirst = true;
     @track inputEnabledSecond = false;
     @track inputEnabledThird = false;
+    @track isLoading = false;
+    @track loadTable = false;
     @track buttonEnabled = true;
-
-
     @track columns = [
         { label: 'Client Name', fieldName: 'clientName'},
         { label: 'Client ID', fieldName: 'Id'},
@@ -30,7 +29,7 @@ export default class SingleReallocation extends LightningElement {
         { label: 'Current Main SA', fieldName: 'ownerFullName'}
     ];
 
-    @track isLoading = false;
+    
     limitSize = 50;
     offsetSize = 0;
     
@@ -162,8 +161,10 @@ export default class SingleReallocation extends LightningElement {
 
     handleButtonClick(event) {
 
+        this.isLoading = true;
         this.accountsData = [];
-        this.offsetSize = 0;
+
+        // this.offsetSize = 0;
         //this.loadMoreData(); when loadmore is ready
          
         getAccounts({ listOwners: this.selectedOwners })
@@ -173,32 +174,37 @@ export default class SingleReallocation extends LightningElement {
                             boutiqueName: customer.Main_boutique__r.Name,
                             clientName: customer.Name,
                             Segment__c: customer.Segment__c,
-                            isChecked: false, display: true }));
+                            isChecked: false,
+                             display: true 
+                }));
+                this.isLoading = false;
+                this.loadTable = true;
+                this.buttonEnabled = true;
             })
             .catch(error => {
                 console.error('Error:', error);
-            });
-    }
-
-    loadMoreData() {
-        this.isLoading = true;
-        apexMethod({listOwners: this.selectedOwners, limitSize: this.limitSize, offsetSize: this.offsetSize })
-            .then(result => {
-                this.data = [...this.data, ...result];
-                this.offsetSize = this.data.length;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            })
-            .finally(() => {
                 this.isLoading = false;
             });
     }
-
-    handleScroll(event) {
-        const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
-        if (bottom) {
-            this.loadMoreData();
-        }
-    }
 }
+    // loadMoreData() {
+    //     this.isLoading = true;
+    //     apexMethod({listOwners: this.selectedOwners, limitSize: this.limitSize, offsetSize: this.offsetSize })
+    //         .then(result => {
+    //             this.data = [...this.data, ...result];
+    //             this.offsetSize = this.data.length;
+    //         })
+    //         .catch(error => {
+    //             console.error('Error:', error);
+    //         })
+    //         .finally(() => {
+    //             this.isLoading = false;
+    //         });
+    // }
+
+    // handleScroll(event) {
+    //     const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
+    //     if (bottom) {
+    //        this.loadMoreData();
+    //     }
+    // }
