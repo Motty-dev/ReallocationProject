@@ -3,7 +3,6 @@
     <div class="slds-card">
 
         <!-- Header Section -->
-        
         <c-header-card h2="Select Main SA" 
                         icon-name="utility:chevronright"
                         icon-size="small"
@@ -91,8 +90,64 @@
             <div style="width: 80%;  padding: 20px; background-color: white; box-sizing: border-box;">
                 <c-single-reallocation-result columns={columns} accounts-data={accountsData}></c-single-reallocation-result>
             </div>
-            <div style="width: 20%; border: 1px solid black; padding: 20px; background-color: green; box-sizing: border-box;">
-                <c-single-reallocation-sa-panel></c-single-reallocation-sa-panel>
+            <div style="width: 20%; border: 1px solid black; padding: 5px; background-color: white; box-sizing: border-box;">
+                <!-- In SingleReallocation.html -->
+                    <div class="container" style="display: contents;
+                                            flex-direction: column;
+                                            justify-content: space-between;
+                                            height : 60%;
+                                            flex-direction: column;
+                                            border: 3px solid #cd3030;">
+
+                        <c-header-card h2="New Main SA" 
+                                        icon-name="utility:chevronright"
+                                        icon-size="small"
+                                        background-color="#EBECF0">
+                        </c-header-card>
+                        <c-multi-box component-id="4"
+                                    label="Country"
+                                    placeholder="All Countries"
+                                    options={countriesData}
+                                    onclickapply={handleClickApplyCountries} 
+                                    onchangebox={changeCheckboxCountries}
+                                    onselectall={handleSelectAllCountries}
+                                    ondeselectall={handleDeselectAllCountries}
+                                    onsearchbox={handleSearchCountry}
+                                    isinputenabled={inputEnabledFirst}>
+                        </c-multi-box>
+                        <div>
+                            <c-multi-box component-id="5"
+                                        label="SA Boutique"
+                                        placeholder="All Boutiques"
+                                        options={storesData}
+                                        onclickapply={handleClickApplyStores}
+                                        onchangebox={changeCheckboxStore}
+                                        onselectall={handleSelectAllStores}
+                                        ondeselectall={handleDeselectAllStores}
+                                        onsearchbox={handleSearchStore}
+                                        isinputenabled={inputEnabledSecond}>
+                            </c-multi-box>
+                        </div>
+                        <div>
+                            <lightning-input type="search" label="Search" onchange={handleSearch}></lightning-input>
+                        </div>
+                        <div class="flex-item"></div>
+                            
+                            <template for:each={salesAssociates} for:item="sa">
+                                <c-sa-card key={sa.Id} sa={sa} onselected={handleSASelected}></c-sa-card>
+                            </template>
+                            <lightning-button label="Apply" onclick={applySelection} class="slds-var-m-top_small"></lightning-button>
+                    </div>
+
+                <!-- <c-single-reallocation-sa-panel countriesdata={countriesData}
+                                handle-click-apply={handleClickApplyCountries}
+                                handle-change-box={changeCheckboxCountries}
+                                handle-select-all={handleSelectAllCountries}
+                                handle-deselect-all={handleDeselectAllCountries}
+                                handle-search-box={handleSearchCountry}
+                                input-enabled-first={inputEnabledFirst}>
+                </c-single-reallocation-sa-panel> -->
+
             </div>
         </div>
         </template>

@@ -1,3 +1,44 @@
 <template>
-    <div>SA PANEL</div>
+    <div class="container" style="display: flex; flex-direction: column; ">
+        <c-header-card h2="Select Main SA" 
+                        icon-name="utility:chevronright"
+                        icon-size="small"
+                        background-color="#EBECF0">
+        </c-header-card>
+        <div>
+            <c-multi-box component-id="1"
+                        label="Country"
+                        placeholder="All Countries"
+                        options={countriesdata}
+                        onclickapply={handleClickApply}
+                        onchangebox={handleChangeBox}
+                        onselectall={handleSelectAll}
+                        ondeselectall={handleDeselectAll}
+                        onsearchbox={handleSearchBox}
+                        isinputenabled={inputEnabledFirst}>
+            </c-multi-box>
+        </div>
+        <div>
+            <c-multi-box component-id="1"
+                        label="Country"
+                        placeholder="All Countries"
+                        options={countriesData}
+                        onclickapply={handleClickApplyCountries}
+                        onchangebox={changeCheckboxCountries}
+                        onselectall={handleSelectAllCountries}
+                        ondeselectall={handleDeselectAllCountries}
+                        onsearchbox={handleSearchCountry}
+                        isinputenabled={inputEnabledFirst}>
+            </c-multi-box>
+        </div>
+        <div>
+            <lightning-input type="search" label="Search" onchange={handleSearch}></lightning-input>
+        </div>
+        <div class="flex-item"></div>
+            
+            <template for:each={salesAssociates} for:item="sa">
+                <c-sa-card key={sa.Id} sa={sa} onselected={handleSASelected}></c-sa-card>
+            </template>
+            <lightning-button label="Apply" onclick={applySelection} class="slds-var-m-top_small"></lightning-button>
+    </div>
 </template>

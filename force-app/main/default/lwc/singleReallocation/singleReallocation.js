@@ -19,7 +19,7 @@ export default class SingleReallocation extends LightningElement {
     @track inputEnabledSecond = false;
     @track inputEnabledThird = false;
     @track isLoading = false;
-    @track loadTable = false;
+    @track loadTable = true;
     @track buttonEnabled = true;
     @track columns = [
         { label: 'Client Name', fieldName: 'clientName'},
@@ -27,12 +27,7 @@ export default class SingleReallocation extends LightningElement {
         { label: 'Segment', fieldName: 'Segment__c'},
         { label: 'Current Main Boutique', fieldName: 'boutiqueName'},
         { label: 'Current Main SA', fieldName: 'ownerFullName'}
-    ];
-
-    
-    limitSize = 50;
-    offsetSize = 0;
-    
+    ];    
     //TODO: dataMap = [this.storesData, this.ownersData, this.countriesData]; to make the functions more generic
     
     // Country Controllers =================================================================================>>>>
@@ -47,6 +42,7 @@ export default class SingleReallocation extends LightningElement {
     }
 
     handleClickApplyCountries(event) {
+        console.log('Apply Event Received', event.detail);
         this.selectedCountries = event.detail.selectedValues;
         this.inputEnabledSecond = true;
     }
@@ -56,6 +52,7 @@ export default class SingleReallocation extends LightningElement {
     }
 
     handleSelectAllCountries() {
+        console.log('Apply Event Received', event.detail);
         this.countriesData.forEach(item => {
             if(item.display) {
                 item.isChecked = true;
@@ -187,24 +184,3 @@ export default class SingleReallocation extends LightningElement {
             });
     }
 }
-    // loadMoreData() {
-    //     this.isLoading = true;
-    //     apexMethod({listOwners: this.selectedOwners, limitSize: this.limitSize, offsetSize: this.offsetSize })
-    //         .then(result => {
-    //             this.data = [...this.data, ...result];
-    //             this.offsetSize = this.data.length;
-    //         })
-    //         .catch(error => {
-    //             console.error('Error:', error);
-    //         })
-    //         .finally(() => {
-    //             this.isLoading = false;
-    //         });
-    // }
-
-    // handleScroll(event) {
-    //     const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
-    //     if (bottom) {
-    //        this.loadMoreData();
-    //     }
-    // }

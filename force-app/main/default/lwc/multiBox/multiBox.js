@@ -33,6 +33,7 @@ export default class MultiBox extends LightningElement {
         const index = event.target.dataset.index;
         
         this.dispatchEvent(new CustomEvent('changebox', {
+            bubbles: true,
             detail: {
                 index: index,
                 checked: isSelected
@@ -50,6 +51,7 @@ export default class MultiBox extends LightningElement {
         }
         else {
             this.dispatchEvent(new CustomEvent('clickapply', {
+                bubbles: true,
                 detail: { 
                     componentId: this.componentId, 
                     selectedValues: this.selectedItems 
@@ -62,6 +64,7 @@ export default class MultiBox extends LightningElement {
     }
     handleSearch(event) {
         this.dispatchEvent(new CustomEvent('searchbox', {
+            bubbles: true,
             detail: {
                 search: event.target.value
             }
@@ -69,6 +72,7 @@ export default class MultiBox extends LightningElement {
     }
     selectAll() {
         this.dispatchEvent(new CustomEvent('selectall', {
+            bubbles: true,
             detail: {
                 componentId: this.componentId
             }
@@ -77,6 +81,7 @@ export default class MultiBox extends LightningElement {
 
     deselectAll() {
         this.dispatchEvent(new CustomEvent('deselectall', {
+            bubbles: true,
             detail: {
                 componentId: this.componentId
             }
