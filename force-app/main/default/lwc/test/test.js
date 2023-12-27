@@ -38,7 +38,7 @@ export default class TestApexMethods extends LightningElement {
 
     testGetOwners() {
         // Replace with actual store IDs from your org
-        let listStores = ['a01Qy000005QR3KIAW','a01Qy000005QR3QIAW']; 
+        let listStores = ['a01Qy000005QR3KIAW','a01Qy000005Qh0HIAS']; 
        
         getOwners( {storesList: listStores})
             .then(result => {

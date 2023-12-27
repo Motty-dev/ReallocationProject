@@ -1,4 +1,5 @@
 .container {
+
     padding: 1em;
     height: 5%;
     background-color: #15e6c5;
@@ -27,6 +28,7 @@
 }
 
 .picklists {
+    overflow:auto;
     display: flex;
     justify-content: space-between;
     flex-grow: 1; 

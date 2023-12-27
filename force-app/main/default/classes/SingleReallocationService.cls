@@ -16,16 +16,23 @@ public with sharing class SingleReallocationService {
 
     @AuraEnabled(cacheable=true)
     public static List<AggregateResult> getOwners(List<String> storesList) {
-        return [SELECT Main_boutique__c, OwnerId, Owner.LastName, Owner.FirstName, COUNT(Id) accountCount 
+        return [SELECT Main_boutique__r.Name, Main_boutique__c, OwnerId, Owner.LastName, Owner.FirstName, COUNT(Id) accountCount 
                 FROM Account 
                 WHERE Main_boutique__c IN :storesList  
-                GROUP BY Main_boutique__c, OwnerId, Owner.LastName, Owner.FirstName];
+                GROUP BY Main_boutique__c, Main_boutique__r.Name, OwnerId, Owner.LastName, Owner.FirstName];
     }
 
     @AuraEnabled(cacheable=true)
     public static List<Account> getAccounts(List<String> listOwners) {
-        return [SELECT Name, Segment__c, OwnerId, Owner.LastName, Owner.FirstName, Main_boutique__r.Name , Main_boutique__c 
+        return [SELECT Name, Segment__c, OwnerId, Owner.LastName, Owner.FirstName, Main_boutique__r.Name , Main_boutique__r.Country__r.Name,  Main_boutique__c 
                 FROM Account
                 WHERE OwnerId IN :listOwners];
+    }
+    @AuraEnabled(cacheable=true)
+    public static List<AggregateResult> getSellers(List<String> sellerList) {
+        return [SELECT Main_boutique__r.Name, Main_boutique__c, OwnerId, Owner.LastName, Owner.FirstName, COUNT(Id) accountCount 
+                FROM Account 
+                WHERE Main_boutique__c IN :sellerList 
+                GROUP BY Main_boutique__c, Main_boutique__r.Name, OwnerId, Owner.LastName, Owner.FirstName];
     }
 }

@@ -725,3 +725,41 @@ export default class MultiBox2 extends LightningElement {
         });
     }
 }
+
+
+
+handleClickApplyStoresSaPanel(event) {
+        this.selectedStoresSaPanel = event.detail.selectedValues;
+        console.log(JSON.stringify(this.ownersDataSaPanel));
+    }
+
+    changeCheckboxStoresSaPanel(event) {
+        this.storesDataSaPanel[event.detail.index].isChecked = event.detail.checked;
+    }
+
+    handleSelectAllStoresSaPanel() {
+        console.log('Apply Event Received', event.detail);
+        this.storesDataSaPanel.forEach(item => {
+            if(item.display) {
+                item.isChecked = true;
+            }
+        });
+    }
+
+    handleDeselectAllStoresSaPanel() {
+        this.storesDataSaPanel.forEach(item => {
+            if(item.display) {
+                item.isChecked = false;
+            }
+        });
+    }
+
+    handleSearchStoreSaPanel(event) {
+        this.storesDataSaPanel.forEach(item => {
+            item.display = item.Name.toLowerCase().includes(event.detail.search.toLowerCase())
+        });
+    }
+
+    handleClickSaPanel(event){
+
+    }

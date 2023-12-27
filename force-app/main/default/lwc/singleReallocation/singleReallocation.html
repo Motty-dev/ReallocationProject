@@ -6,7 +6,7 @@
         <c-header-card h2="Select Main SA" 
                         icon-name="utility:chevronright"
                         icon-size="small"
-                        background-color="#EBECF0">
+                        background-color="#e1e6e8">
         </c-header-card>
         
         <!-- Flexbox Container -->
@@ -73,82 +73,80 @@
         <c-header-card h2="Results" 
                         icon-name="utility:chevronright"
                         icon-size="small"
-                        background-color="#EBECF0">
+                        background-color="#e1e6e8">
         </c-header-card>
 
         <!--Results and SA Panel-->
 
         <template if:true={isLoading}>
-            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999;">
-                <div style="background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center;">
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(2px); display: flex; justify-content: center; align-items: center; z-index: 999;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                     <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
                 </div>
             </div>
         </template>
         <template if:true={loadTable}>
-        <div style="display: flex; gap: 20px;">
-            <div style="width: 80%;  padding: 20px; background-color: white; box-sizing: border-box;">
+        <div style="display: flex; gap: 1px;">
+            <div style="width: 80%;  padding: 13px; background-color: white; box-sizing: border-box;">
                 <c-single-reallocation-result columns={columns} accounts-data={accountsData}></c-single-reallocation-result>
             </div>
-            <div style="width: 20%; border: 1px solid black; padding: 5px; background-color: white; box-sizing: border-box;">
+            <div style="width: 20%;height: 510px; border: 1px solid black; padding: 5px; background-color: white; box-sizing: border-box;">
                 <!-- In SingleReallocation.html -->
                     <div class="container" style="display: contents;
                                             flex-direction: column;
                                             justify-content: space-between;
-                                            height : 60%;
+                                            height: 510px;
                                             flex-direction: column;
                                             border: 3px solid #cd3030;">
 
-                        <c-header-card h2="New Main SA" 
+                        <div style="width: 100%; height: 45%; border: 1px solid black; background-color: white; box-sizing: border-box;">
+                            <c-header-card h2="New Main SA" 
                                         icon-name="utility:chevronright"
                                         icon-size="small"
-                                        background-color="#EBECF0">
-                        </c-header-card>
-                        <c-multi-box component-id="4"
+                                        background-color="#e1e6e8">
+                            </c-header-card>
+                            <c-multi-box component-id="4"
                                     label="Country"
                                     placeholder="All Countries"
-                                    options={countriesData}
-                                    onclickapply={handleClickApplyCountries} 
-                                    onchangebox={changeCheckboxCountries}
-                                    onselectall={handleSelectAllCountries}
-                                    ondeselectall={handleDeselectAllCountries}
-                                    onsearchbox={handleSearchCountry}
+                                    options={countriesDataSaPanel}
+                                    onclickapply={handleClickApplyCountriesSaPanel} 
+                                    onchangebox={changeCheckboxCountriesSaPanel}
+                                    onselectall={handleSelectAllCountriesSaPanel}
+                                    ondeselectall={handleDeselectAllCountriesSaPanel}
+                                    onsearchbox={handleSearchCountrySaPanel}
                                     isinputenabled={inputEnabledFirst}>
-                        </c-multi-box>
-                        <div>
+                            </c-multi-box>
+                        
                             <c-multi-box component-id="5"
                                         label="SA Boutique"
                                         placeholder="All Boutiques"
-                                        options={storesData}
-                                        onclickapply={handleClickApplyStores}
-                                        onchangebox={changeCheckboxStore}
-                                        onselectall={handleSelectAllStores}
-                                        ondeselectall={handleDeselectAllStores}
-                                        onsearchbox={handleSearchStore}
-                                        isinputenabled={inputEnabledSecond}>
+                                        options={storesDataSaPanel}
+                                        onclickapply={handleClickApplyStoresSaPanel}
+                                        onchangebox={changeCheckboxStoresSaPanel}
+                                        onselectall={handleSelectAllStoresSaPanel}
+                                        ondeselectall={handleDeselectAllStoresSaPanel}
+                                        onsearchbox={handleSearchStoreSaPanel}
+                                        isinputenabled={inputEnabledForth}>
                             </c-multi-box>
+                            <div>
+                                <lightning-input type="search" label="Search" onchange={handleSearch}></lightning-input>
+                            </div>
                         </div>
-                        <div>
-                            <lightning-input type="search" label="Search" onchange={handleSearch}></lightning-input>
-                        </div>
-                        <div class="flex-item"></div>
-                            
-                            <template for:each={salesAssociates} for:item="sa">
-                                <c-sa-card key={sa.Id} sa={sa} onselected={handleSASelected}></c-sa-card>
+                        <div style="width: 100%; height: 55%; border: 1px solid black; background-color: white; box-sizing: border-box; overflow: auto;">
+                            <div class="flex-item"></div>
+                            <template for:each={ownersDataSaPanel} for:item="sa">
+                                <c-sa-card key={sa.OwnerId}
+                                            component-id={sa.componentId}
+                                            owner-name={sa.OwnerName}
+                                            owner-id={sa.OwnerId}
+                                            store-name={sa.StoreName} 
+                                            store-id={sa.StoreId}
+                                account-count={sa.AccountCount}> onselected={handleSASelected}></c-sa-card>
                             </template>
-                            <lightning-button label="Apply" onclick={applySelection} class="slds-var-m-top_small"></lightning-button>
-                    </div>
-
-                <!-- <c-single-reallocation-sa-panel countriesdata={countriesData}
-                                handle-click-apply={handleClickApplyCountries}
-                                handle-change-box={changeCheckboxCountries}
-                                handle-select-all={handleSelectAllCountries}
-                                handle-deselect-all={handleDeselectAllCountries}
-                                handle-search-box={handleSearchCountry}
-                                input-enabled-first={inputEnabledFirst}>
-                </c-single-reallocation-sa-panel> -->
-
-            </div>
+                            <!-- <lightning-button label="Apply" onclick={handleClickSaPanel} class="slds-var-m-top_small"></lightning-button> -->
+                        </div>
+                     </div>  
+                </div>
         </div>
         </template>
     </div>

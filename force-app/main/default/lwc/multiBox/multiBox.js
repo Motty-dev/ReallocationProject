@@ -40,7 +40,6 @@ export default class MultiBox extends LightningElement {
             }
         }));
     }
-
     handleApply() {
         if(this.selectedItems.length == 0) {
             this.dispatchEvent(new ShowToastEvent({
@@ -91,7 +90,6 @@ export default class MultiBox extends LightningElement {
     toggleDropdown() {
         this.showDropdown = !this.showDropdown;
     }
-
     closeDropdown() {
         this.showDropdown = false;
     }

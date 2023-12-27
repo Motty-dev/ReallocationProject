@@ -1,3 +1,12 @@
 <template>
-    
+    <div class="container">
+        <div class="upper-div">
+            <lightning-input type="radio" label="" name="saSelection" value={ownerId}></lightning-input>
+            <span class="sa-name">{ownerName} ({accountCount})</span>
+        </div>
+        <div class="lower-div">
+            <span class="store-name">{storeName}</span>
+            <span class="info-icon">i</span>
+        </div>
+    </div>
 </template>
