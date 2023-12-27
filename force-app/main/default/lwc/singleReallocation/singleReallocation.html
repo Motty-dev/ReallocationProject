@@ -79,7 +79,10 @@
         <!--Results and SA Panel-->
 
         <template if:true={isLoading}>
-            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(2px); display: flex; justify-content: center; align-items: center; z-index: 999;">
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                        background: rgba(255, 255, 255, 0.3); 
+                        backdrop-filter: blur(2px); display: flex; justify-content: center; 
+                        align-items: center; z-index: 999;">
                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                     <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
                 </div>
@@ -88,9 +91,15 @@
         <template if:true={loadTable}>
         <div style="display: flex; gap: 1px;">
             <div style="width: 80%;  padding: 13px; background-color: white; box-sizing: border-box;">
-                <c-single-reallocation-result columns={columns} accounts-data={accountsData}></c-single-reallocation-result>
+                <c-single-reallocation-result columns={columns} 
+                                            accounts-data={accountsData} 
+                                            onrowselection={handleRowSelection} 
+                                            selected-user-ids={selectedUserIds}
+                                            selected-text={selectedText}>
+                </c-single-reallocation-result>
             </div>
-            <div style="width: 20%;height: 510px; border: 1px solid black; padding: 5px; background-color: white; box-sizing: border-box;">
+            <div style="width: 20%;height: 510px; border: 1px solid black; padding: 5px;
+                                            background-color: white; box-sizing: border-box;">
                 <!-- In SingleReallocation.html -->
                     <div class="container" style="display: contents;
                                             flex-direction: column;
@@ -99,7 +108,9 @@
                                             flex-direction: column;
                                             border: 3px solid #cd3030;">
 
-                        <div style="width: 100%; height: 45%; border: 1px solid black; background-color: white; box-sizing: border-box;">
+                        <div style="width: 100%; height: 45%; border: 1px solid black;
+                                            background-color: white;
+                                            box-sizing: border-box;">
                             <c-header-card h2="New Main SA" 
                                         icon-name="utility:chevronright"
                                         icon-size="small"
@@ -132,7 +143,8 @@
                                 <lightning-input type="search" label="Search" onchange={handleSearch}></lightning-input>
                             </div>
                         </div>
-                        <div style="width: 100%; height: 55%; border: 1px solid black; background-color: white; box-sizing: border-box; overflow: auto;">
+                        <div style="width: 100%; height: 55%; border: 1px solid black;
+                                        background-color: white; box-sizing: border-box; overflow: auto;">
                             <div class="flex-item"></div>
                             <template for:each={ownersDataSaPanel} for:item="sa">
                                 <c-sa-card key={sa.OwnerId}
@@ -141,7 +153,8 @@
                                             owner-id={sa.OwnerId}
                                             store-name={sa.StoreName} 
                                             store-id={sa.StoreId}
-                                account-count={sa.AccountCount}> onselected={handleSASelected}></c-sa-card>
+                                            account-count={sa.AccountCount} 
+                                            onselected={handleSASelected}></c-sa-card>
                             </template>
                             <!-- <lightning-button label="Apply" onclick={handleClickSaPanel} class="slds-var-m-top_small"></lightning-button> -->
                         </div>

@@ -24,9 +24,14 @@
                 </div>
             </div>
             <div class="singleReallocationResult__table" style="height: 450px;">
+                <p>{selectedText}</p>
+
                 <lightning-datatable
                     key-field="Id"
-                    data={accountsData}
+                    data={displayedData}
+                    onloadmore={handleScroll}
+                    onrowselection={handleRowSelection}
+                    enable-infinite-loading
                     show-row-number-column
                     columns={columns}>
                 </lightning-datatable>

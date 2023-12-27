@@ -11,6 +11,7 @@ export default class SingleReallocation extends LightningElement {
     @track ownersData = [];
     @track accountsData = []; 
     @track countriesData = []; 
+    @track selectedUserIds = [];
 
     @track selectedStores = []; 
     @track selectedOwners = []; 
@@ -25,7 +26,7 @@ export default class SingleReallocation extends LightningElement {
     @track selectedOwnersSaPanel = [];
     @track selectedCountriesSaPanel = []; 
     
-    @track loadTable = true;
+    @track loadTable = false;
     @track isLoading = false;
     @track buttonEnabled = true;
     @track inputEnabledFirst = true;
@@ -43,6 +44,8 @@ export default class SingleReallocation extends LightningElement {
         { label: 'Current Main SA', fieldName: 'ownerFullName'}
     ];    
     //TODO: dataMap = [this.storesData, this.ownersData, this.countriesData, this.selectedStoresSaPanel]; to make the functions more generic
+    
+
     
     // Country Controllers =================================================================================>>>>
 
@@ -285,5 +288,17 @@ export default class SingleReallocation extends LightningElement {
     handleClickSaPanel(event){
 
     }
+    // Table controllers =================================================================================>>>>
 
+    get selectedText() {
+        const totalClients = this.accountsData ? this.accountsData.length : 0;
+        const selectedCount = this.selectedUserIds ? this.selectedUserIds.length : 0;
+        return `${selectedCount} of ${totalClients} Clients selected`;
+    }
+
+    handleRowSelection(event) {
+        this.selectedUserIds = event.detail;
+        console.log(JSON.stringify(this.selectedUserIds));
+    }
+    
 }
