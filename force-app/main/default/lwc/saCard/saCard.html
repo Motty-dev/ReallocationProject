@@ -1,12 +1,18 @@
 <template>
-    <div class="container">
-        <div class="upper-div">
-            <lightning-input type="radio" label="" name="saSelection" value={ownerId}></lightning-input>
-            <span class="sa-name">{ownerName} ({accountCount})</span>
+    <div class="container" style="height: 70px; 
+                                justify-content:start;
+                                border: 2px solid #A3D5FF; margin: 15px; border-radius: 5px; 
+                                box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);">
+        <div class="upper-div" style="font-size: 14px; padding-left:15px; padding-top: 15px;
+                    display: flex;">
+            <lightning-input type="radio" label="" name="saSelection" value={ownerId} onchange={handleRadioChange}></lightning-input>
+            <span class="sa-name" style="font-weight: bold; padding-right: 3px;">{ownerName}</span> <span style="font-size: 11px; padding-top: 2px;">({accountCount})</span>
         </div>
-        <div class="lower-div">
-            <span class="store-name">{storeName}</span>
-            <span class="info-icon">i</span>
+        <div class="lower-div" style="display: flex;">
+             <div style="width: 85%; padding-left: 47px; padding-top: 4px; font-size: 12px;"> <span class="store-name">{storeName}</span> </div>
+            
+            <div style="width: 15%; display:flex; justify-content: center; padding-top: 5px; "> <lightning-icon icon-name=utility:info size="xx-small"></lightning-icon> </div>
+    
         </div>
     </div>
 </template>

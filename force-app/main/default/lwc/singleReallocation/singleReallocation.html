@@ -95,20 +95,21 @@
                                             accounts-data={accountsData} 
                                             onrowselection={handleRowSelection} 
                                             selected-user-ids={selectedUserIds}
-                                            selected-text={selectedText}>
+                                            selected-text={selectedText}
+                                            country-options={countryOptions}
+                                            boutique-options={boutiqueOptions}>
                 </c-single-reallocation-result>
             </div>
-            <div style="width: 20%;height: 510px; border: 1px solid black; padding: 5px;
+            <div style="width: 20%;height: 530px; padding: 5px;
                                             background-color: white; box-sizing: border-box;">
                 <!-- In SingleReallocation.html -->
                     <div class="container" style="display: contents;
                                             flex-direction: column;
                                             justify-content: space-between;
-                                            height: 510px;
-                                            flex-direction: column;
-                                            border: 3px solid #cd3030;">
+                                            height: 530px;
+                                            flex-direction: column;">
 
-                        <div style="width: 100%; height: 45%; border: 1px solid black;
+                        <div style="width: 100%; height: 45%;
                                             background-color: white;
                                             box-sizing: border-box;">
                             <c-header-card h2="New Main SA" 
@@ -143,9 +144,10 @@
                                 <lightning-input type="search" label="Search" onchange={handleSearch}></lightning-input>
                             </div>
                         </div>
-                        <div style="width: 100%; height: 55%; border: 1px solid black;
+                        <div style="display: flex; flex-direction: column; justify-content:unset;
+                                        width: 100%; height: 48%;
                                         background-color: white; box-sizing: border-box; overflow: auto;">
-                            <div class="flex-item"></div>
+                            
                             <template for:each={ownersDataSaPanel} for:item="sa">
                                 <c-sa-card key={sa.OwnerId}
                                             component-id={sa.componentId}
@@ -154,9 +156,28 @@
                                             store-name={sa.StoreName} 
                                             store-id={sa.StoreId}
                                             account-count={sa.AccountCount} 
-                                            onselected={handleSASelected}></c-sa-card>
+                                            onselected={handleOwnerSelected}>
+                                </c-sa-card>
                             </template>
                             <!-- <lightning-button label="Apply" onclick={handleClickSaPanel} class="slds-var-m-top_small"></lightning-button> -->
+                        </div>
+                        <div style="display: flex; justify-content: center; width: 100%; height: 7%;
+                                        background-color: white; box-sizing: border-box; overflow: auto; padding-top: 3px;">
+                                        <lightning-button label="Save" 
+                                                    variant="brand"
+                                                    onclick={openModal}
+                                                    disabled={reallocaInable}>
+                                        </lightning-button>
+                                        <template if:true={isModalOpen}>
+
+                                            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                                                    background: rgba(255, 255, 255, 0.3); 
+                                                    backdrop-filter: blur(2px); display: flex; justify-content: center; 
+                                                    align-items: center; z-index: 999;">
+                                                    <c-model-popup onclosemdoel={closeModalHandler}></c-model-popup>
+                                            </div>
+                                            
+                                        </template>
                         </div>
                      </div>  
                 </div>
@@ -164,3 +185,4 @@
         </template>
     </div>
 </template>
+

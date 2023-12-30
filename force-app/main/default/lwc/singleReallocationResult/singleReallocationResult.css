@@ -28,7 +28,7 @@
 }
 
 .picklists {
-    overflow:auto;
+    overflow: visible;
     display: flex;
     justify-content: space-between;
     flex-grow: 1; 

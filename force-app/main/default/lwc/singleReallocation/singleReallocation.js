@@ -4,6 +4,10 @@ import getStores from '@salesforce/apex/StoreService.getStores';
 import getOwners from '@salesforce/apex/UserService.getOwners';
 import getAccounts from '@salesforce/apex/SingleReallocationService.getAccounts';
 import getSellers from '@salesforce/apex/SingleReallocationService.getSellers';
+import getCountryNames from '@salesforce/apex/SingleReallocationService.getCountryNames';
+import getStoreNames from '@salesforce/apex/SingleReallocationService.getStoreNames';
+
+
 
 export default class SingleReallocation extends LightningElement {
 
@@ -13,9 +17,12 @@ export default class SingleReallocation extends LightningElement {
     @track countriesData = []; 
     @track selectedUserIds = [];
 
+    @track countryOptions = [];
+    @track boutiqueOptions = [];
+
     @track selectedStores = []; 
     @track selectedOwners = []; 
-    @track selectedAccounts = []; ///for ids from the table
+    @track selectedAccounts = []; 
     @track selectedCountries = [];
 
     @track storesDataSaPanel = [];
@@ -25,15 +32,18 @@ export default class SingleReallocation extends LightningElement {
     @track selectedStoresSaPanel = [];
     @track selectedOwnersSaPanel = [];
     @track selectedCountriesSaPanel = []; 
+
     
-    @track loadTable = false;
+
+    @track loadTable = true;
     @track isLoading = false;
+    @track isModalOpen = false;
     @track buttonEnabled = true;
+    @track reallocaInable = true;
     @track inputEnabledFirst = true;
     @track inputEnabledThird = false;
     @track inputEnabledForth = false;
     @track inputEnabledSecond = false;
-    
 
     @track columns = [
         { label: 'Client Name', fieldName: 'clientName'},
@@ -63,7 +73,10 @@ export default class SingleReallocation extends LightningElement {
     handleClickApplyCountries(event) {
         this.selectedCountries = event.detail.selectedValues;
         this.inputEnabledSecond = true;
+        console.log(JSON.stringify(this.selectedCountries));
+        this.getCountryNamesHandler();
     }
+    
 
     changeCheckboxCountries(event) {
         this.countriesData[event.detail.index].isChecked = event.detail.checked;
@@ -104,6 +117,7 @@ export default class SingleReallocation extends LightningElement {
     handleClickApplyStores(event) {
         this.selectedStores = event.detail.selectedValues;
         this.inputEnabledThird = true;
+        this.getStoreNamesHandler();
     }
 
     changeCheckboxStore(event) {
@@ -177,8 +191,9 @@ export default class SingleReallocation extends LightningElement {
         
         getAccounts({ listOwners: this.selectedOwners })
             .then(data => {
-                console.log(JSON.stringify(data));
-                this.accountsData = data.map(customer => ({ Id: customer.Id, ownerFullName: customer.Owner.FirstName + ' ' + customer.Owner.LastName,
+                this.accountsData = data.map(customer => ({
+                            Id: customer.Id, 
+                            ownerFullName: customer.Owner.FirstName + ' ' + customer.Owner.LastName,
                             boutiqueName: customer.Main_boutique__r.Name,
                             clientName: customer.Name,
                             Segment__c: customer.Segment__c,
@@ -194,6 +209,7 @@ export default class SingleReallocation extends LightningElement {
                 console.error('Error:', error);
                 this.isLoading = false;
             });
+        this.fetchAndSetFilterOptions();
     }
 
     // SaPanel controllers =================================================================================>>>>
@@ -257,6 +273,7 @@ export default class SingleReallocation extends LightningElement {
 
     handleClickApplyStoresSaPanel(event) {
         this.selectedStoresSaPanel = event.detail.selectedValues;
+        
     }
 
     changeCheckboxStoresSaPanel(event) {
@@ -285,9 +302,18 @@ export default class SingleReallocation extends LightningElement {
         });
     }
 
-    handleClickSaPanel(event){
-
+    handleOwnerSelected(event) {
+        const ownerDetails = event.detail;
+        this.selectedOwnersSaPanel = ownerDetails; 
+        console.log('ownerDetails: ' + JSON.stringify(this.selectedOwnersSaPanel));
+        this.reallocaInable = false;
     }
+
+
+    handleClickSaPanel(event){
+        
+    }
+
     // Table controllers =================================================================================>>>>
 
     get selectedText() {
@@ -300,5 +326,39 @@ export default class SingleReallocation extends LightningElement {
         this.selectedUserIds = event.detail;
         console.log(JSON.stringify(this.selectedUserIds));
     }
-    
+
+    getCountryNamesHandler() {
+        getCountryNames({ countryIds: this.selectedCountries })
+            .then(result => {
+                this.countryOptions = [{ label: 'None', value: '' }];
+                this.countryOptions.push(...result.map(name => ({ label: name, value: name })));
+            })
+            .catch(error => {
+                console.error('Error fetching country names:', error);
+            });
+    }
+
+    getStoreNamesHandler() {
+        getStoreNames({ storeIds: this.selectedStores })
+            .then(result => {
+                this.boutiqueOptions = [{ label: 'None', value: '' }];
+                this.boutiqueOptions.push(...result.map(name => ({ label: name, value: name })));
+            })
+            .catch(error => {
+                console.error('Error fetching store names:', error);
+            });
+    }
+
+    // PopUp Model controllers =================================================================================>>>>
+
+    openModal() {
+        this.isModalOpen = true;
+    }
+    closeModalHandler(event) {
+        this.isModalOpen = false;
+    }
+    reallocateclients() {
+        this.isModalOpen = false;
+        //
+    }
 }

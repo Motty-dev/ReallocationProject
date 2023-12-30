@@ -35,4 +35,25 @@ public with sharing class SingleReallocationService {
                 WHERE Main_boutique__c IN :sellerList 
                 GROUP BY Main_boutique__c, Main_boutique__r.Name, OwnerId, Owner.LastName, Owner.FirstName];
     }
+
+    @AuraEnabled(cacheable=true)
+    public static List<String> getCountryNames(List<Id> countryIds) {
+        List<Country__c> countries = [SELECT Name FROM Country__c WHERE Id IN :countryIds];
+        List<String> countryNames = new List<String>();
+        for (Country__c country : countries) {
+            countryNames.add(country.Name);
+        }
+        return countryNames;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<String> getStoreNames(List<Id> storeIds) {
+        List<Store__c> stores = [SELECT Name FROM Store__c WHERE Id IN :storeIds];
+        List<String> storeNames = new List<String>();
+        for (Store__c store : stores) {
+            storeNames.add(store.Name);
+        }
+        return storeNames;
+    }
+
 }
