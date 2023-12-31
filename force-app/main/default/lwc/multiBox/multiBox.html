@@ -14,8 +14,8 @@
             <!-- Dropdown with Header and Footer -->
 
             <template if:true={showDropdown}>
-                <div class="absolute-position slds-box_border" 
-                        style="width:100%; background-color: white; border-radius:5px"
+                <div class="absolute-position slds-box_border"  
+                        style="width:100%; background-color: white; border-radius:5px;"
                         onblur={closeDropdown}
                         onmouseleave={closeDropdown}>
 
@@ -39,7 +39,7 @@
 
                     <!-- Dropdown List -->
 
-                    <ul class="dropdown-list slds-dropdown_length-10 slds-var-p-left_medium">
+                    <ul class="dropdown-list slds-dropdown_length-10 slds-var-p-left_medium" style="max-height: 237px; overflow-y: auto;">
                         <template for:each={myOptions} for:item="option" for:index="index">
                             <li if:true={option.display} key={option.Id} class="dropdown-item">
                                 <lightning-input type="checkbox" 
