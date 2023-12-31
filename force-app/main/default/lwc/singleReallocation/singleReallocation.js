@@ -386,7 +386,7 @@ export default class SingleReallocation extends LightningElement {
         reallocateClients2({ customerIds: this.selectedUserIds, newOwnerId: this.selectedOwnersSaPanel.ownerId, newStoreId: this.selectedOwnersSaPanel.storeId })
             .then(() => {
                 console.log('Customers updated successfully');
-                this.dispatchEvent(showToast('Error', 'Customers updated successfully ', 'success'));
+                this.dispatchEvent(showToast('Success !', 'Customers updated successfully ', 'success'));
             })
             .catch(error => {
                 this.dispatchEvent(showToast('Error', 'Failed to update customers: ' + error.body.message, 'error'));

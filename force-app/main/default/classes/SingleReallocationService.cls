@@ -96,14 +96,15 @@ public with sharing class SingleReallocationService {
     @AuraEnabled
     public static void reallocateClients2(List<String> customerIds, Id newOwnerId, String newStoreId) {
         try {
-            List<Account> customersToUpdate = [SELECT Name, Id, OwnerId, Main_boutique__c FROM Account WHERE Id IN :customerIds];
+            List<Account> listCustomers = [SELECT Name, Id, OwnerId, Main_boutique__c FROM Account WHERE Id IN :customerIds];
+            List<Account> listToUpdate = new List<Account>();
 
-        for(String customerId : customerIds) {
-            Account customer = new Account(Id = customerId, OwnerId = newOwnerId, Main_boutique__c = newStoreId);
-            customersToUpdate.add(customer);
+        for(Account customerItem : listCustomers) {
+            Account customer = new Account(Id = customerItem.Id, OwnerId = newOwnerId, Main_boutique__c = newStoreId);
+            listToUpdate.add(customer);
         }
 
-        update customersToUpdate;
+        update listToUpdate;
             
         } catch (Exception e) {
             throw new AuraHandledException('Error reallocating clients: ' + e.getMessage());

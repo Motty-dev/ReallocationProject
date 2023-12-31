@@ -7,22 +7,19 @@ export default class SingleReallocationResult extends LightningElement {
     pageSize = 20;
     @api columns;
     @api selectedText;
-    @track displayedData = [];
-    @track lastIndex = this.pageSize;
-
-    
     @api countryOptions = [];
-    @api boutiqueOptions = []; 
+    @api boutiqueOptions = [];
+    @track displayedData = []; 
     @track segmentOptions = []; 
     @api selectedCountry = '';
     @api selectedBoutique = '';
     @track selectedSegment = '';
+    @track lastIndex = this.pageSize;
     
     @api
     get accountsData() {
         return this._accountsData;
     }
-
 
     set accountsData(value) {
         this._accountsData = value;
@@ -68,12 +65,11 @@ export default class SingleReallocationResult extends LightningElement {
         
         const searchTerm = event.target.value.toLowerCase();
 
-        
-            this.applyFilters();
-            this.displayedData = this.displayedData.filter(item =>
-                item.clientName.toLowerCase().includes(searchTerm) ||
-                item.Id.toString().toLowerCase().includes(searchTerm)
-            );
+        this.applyFilters();
+        this.displayedData = this.displayedData.filter(item =>
+            item.clientName.toLowerCase().includes(searchTerm) ||
+            item.Id.toString().toLowerCase().includes(searchTerm)
+        );
     }
 
     handleCountryChange(event) {
