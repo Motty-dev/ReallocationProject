@@ -65,16 +65,15 @@ export default class SingleReallocationResult extends LightningElement {
     }
 
     handleSearch(event) {
-        clearTimeout(this.searchTimeout);
+        
         const searchTerm = event.target.value.toLowerCase();
 
-        this.searchTimeout = setTimeout(() => {
+        
             this.applyFilters();
             this.displayedData = this.displayedData.filter(item =>
                 item.clientName.toLowerCase().includes(searchTerm) ||
                 item.Id.toString().toLowerCase().includes(searchTerm)
             );
-        }, 200);
     }
 
     handleCountryChange(event) {

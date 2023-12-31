@@ -1,4 +1,4 @@
-import { LightningElement,track } from 'lwc';
+import { LightningElement } from 'lwc';
 export default class ModalPopup extends LightningElement {
     
     
@@ -6,6 +6,6 @@ export default class ModalPopup extends LightningElement {
         this.dispatchEvent(new CustomEvent('closemdoel'));
     }
     submitDetails() {
-        
+        this.dispatchEvent(new CustomEvent('updatecustomers'));
     }
 }

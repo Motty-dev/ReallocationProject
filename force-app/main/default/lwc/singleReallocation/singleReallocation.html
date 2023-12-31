@@ -141,7 +141,7 @@
                                         isinputenabled={inputEnabledForth}>
                             </c-multi-box>
                             <div>
-                                <lightning-input type="search" label="Search" onchange={handleSearch}></lightning-input>
+                                <lightning-input type="search" label="Search" onchange={handleSearchOwnersSaPanel}></lightning-input>
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column; justify-content:unset;
@@ -168,13 +168,13 @@
                                                     onclick={openModal}
                                                     disabled={reallocaInable}>
                                         </lightning-button>
-                                        <template if:true={isModalOpen}>
+                                        <template if:true={modelOepn}>
 
                                             <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                                                    background: rgba(255, 255, 255, 0.3); 
+                                                    background: rgba(255, 255, 255, 0.2); 
                                                     backdrop-filter: blur(2px); display: flex; justify-content: center; 
                                                     align-items: center; z-index: 999;">
-                                                    <c-model-popup onclosemdoel={closeModalHandler}></c-model-popup>
+                                                    <c-model-popup onclosemdoel={closeModalHandler} onupdatecustomers={updateCustomersHndler}></c-model-popup>
                                             </div>
                                             
                                         </template>

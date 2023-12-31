@@ -1,13 +1,14 @@
-import { LightningElement, wire, track, api } from 'lwc';
-import getCountries from '@salesforce/apex/CountryService.getCountries';
-import getStores from '@salesforce/apex/StoreService.getStores';
+import { LightningElement, wire, track } from 'lwc';
 import getOwners from '@salesforce/apex/UserService.getOwners';
-import getAccounts from '@salesforce/apex/SingleReallocationService.getAccounts';
+import getStores from '@salesforce/apex/StoreService.getStores';
+import getCountries from '@salesforce/apex/CountryService.getCountries';
 import getSellers from '@salesforce/apex/SingleReallocationService.getSellers';
-import getCountryNames from '@salesforce/apex/SingleReallocationService.getCountryNames';
+import getAccounts from '@salesforce/apex/SingleReallocationService.getAccounts';
 import getStoreNames from '@salesforce/apex/SingleReallocationService.getStoreNames';
+import getCountryNames from '@salesforce/apex/SingleReallocationService.getCountryNames';
+import reallocateClients2 from '@salesforce/apex/SingleReallocationService.reallocateClients2';
 
-
+import { showToast } from 'c/errorHandler';
 
 export default class SingleReallocation extends LightningElement {
 
@@ -27,7 +28,9 @@ export default class SingleReallocation extends LightningElement {
 
     @track storesDataSaPanel = [];
     @track ownersDataSaPanel = [];
+    @track originalOwnersData = [];
     @track countriesDataSaPanel = []; 
+    
 
     @track selectedStoresSaPanel = [];
     @track selectedOwnersSaPanel = [];
@@ -35,7 +38,7 @@ export default class SingleReallocation extends LightningElement {
 
     
 
-    @track loadTable = true;
+    @track loadTable = false;
     @track isLoading = false;
     @track isModalOpen = false;
     @track buttonEnabled = true;
@@ -53,9 +56,8 @@ export default class SingleReallocation extends LightningElement {
         { label: 'Current Main Boutique', fieldName: 'boutiqueName'},
         { label: 'Current Main SA', fieldName: 'ownerFullName'}
     ];    
-    //TODO: dataMap = [this.storesData, this.ownersData, this.countriesData, this.selectedStoresSaPanel]; to make the functions more generic
-    
-
+    //TODO: dataMap = [this.storesData, this.ownersData, this.countriesData, this.selectedStoresSaPanel];
+    // to make the functions more generic
     
     // Country Controllers =================================================================================>>>>
 
@@ -66,7 +68,7 @@ export default class SingleReallocation extends LightningElement {
             this.countriesDataSaPanel = JSON.parse(JSON.stringify(this.countriesData));
 
         } else if (error) {
-            // Handle error
+            this.dispatchEvent(showToast('Error', 'Failed to retrieve countries: ' + error.body.message, 'error'));
         }
     }
 
@@ -111,7 +113,7 @@ export default class SingleReallocation extends LightningElement {
         if (data) {
             this.storesData = data.map(store => ({ Name: store.Name, Id: store.Main_boutique__c, isChecked: false, display: true }));
         } else if (error) {
-            console.error(error);
+            this.dispatchEvent(showToast('Error', 'Failed to retrieve stores: ' + error.body.message, 'error'));
         }  
     }
     handleClickApplyStores(event) {
@@ -149,7 +151,7 @@ export default class SingleReallocation extends LightningElement {
         if (data) {
             this.ownersData = data.map(owner => ({ Name: owner.FirstName + " " + owner.LastName + " (" + owner.accountCount + ")", Id: owner.OwnerId, isChecked: false, display: true }));
         } else if (error) {
-            // Handle error
+            this.dispatchEvent(showToast('Error', 'Failed to retrieve owners: ' + error.body.message, 'error'));
         }
     }
     handleClickApplyOwners(event) {
@@ -206,7 +208,7 @@ export default class SingleReallocation extends LightningElement {
                 this.buttonEnabled = true;
             })
             .catch(error => {
-                console.error('Error:', error);
+                this.dispatchEvent(showToast('Error', 'Failed to retrieve accounts: ' + error.body.message, 'error'));
                 this.isLoading = false;
             });
         this.fetchAndSetFilterOptions();
@@ -219,7 +221,7 @@ export default class SingleReallocation extends LightningElement {
         if (data) {
             this.storesDataSaPanel = data.map(store => ({ Name: store.Name, Id: store.Main_boutique__c, isChecked: false, display: true }));
         } else if (error) {
-            console.error(error);
+            this.dispatchEvent(showToast('Error', 'Failed to retrieve stores: ' + error.body.message, 'error'));
         }  
     }
 
@@ -234,10 +236,11 @@ export default class SingleReallocation extends LightningElement {
                 OwnerName: owner.FirstName + ' ' + owner.LastName,
                 AccountCount: owner.accountCount,
             }));
+            this.originalOwnersData = [...this.ownersDataSaPanel];
 
             console.log('TEST ', JSON.stringify(this.ownersDataSaPanel));
         } else if (error) {
-            // console.log(error);
+            this.dispatchEvent(showToast('Error', 'Failed to retrieve sellers: ' + error.body.message, 'error'));
         }
     }
     handleClickApplyCountriesSaPanel(event) {
@@ -309,6 +312,18 @@ export default class SingleReallocation extends LightningElement {
         this.reallocaInable = false;
     }
 
+    handleSearchOwnersSaPanel(event) {
+        const searchTerm = event.target.value.toLowerCase();
+    
+        if (searchTerm) {
+            this.ownersDataSaPanel = this.originalOwnersData.filter(owner => 
+                owner.OwnerName.toLowerCase().includes(searchTerm) || 
+                owner.StoreName.toLowerCase().includes(searchTerm)
+            );
+        } else {
+            this.ownersDataSaPanel = [...this.originalOwnersData];
+        }
+    }
 
     handleClickSaPanel(event){
         
@@ -334,7 +349,8 @@ export default class SingleReallocation extends LightningElement {
                 this.countryOptions.push(...result.map(name => ({ label: name, value: name })));
             })
             .catch(error => {
-                console.error('Error fetching country names:', error);
+                this.dispatchEvent(showToast('Error', 'Failed to fetch country names: ' + error.body.message, 'error'));
+
             });
     }
 
@@ -345,11 +361,15 @@ export default class SingleReallocation extends LightningElement {
                 this.boutiqueOptions.push(...result.map(name => ({ label: name, value: name })));
             })
             .catch(error => {
-                console.error('Error fetching store names:', error);
+                this.dispatchEvent(showToast('Error', 'Failed to fetch store names: ' + error.body.message, 'error'));
             });
     }
 
     // PopUp Model controllers =================================================================================>>>>
+
+    get modelOepn(){
+        return this.isModalOpen;
+    }
 
     openModal() {
         this.isModalOpen = true;
@@ -359,6 +379,18 @@ export default class SingleReallocation extends LightningElement {
     }
     reallocateclients() {
         this.isModalOpen = false;
-        //
+    }
+
+    updateCustomersHndler() {
+        console.log('Calling Apex with:',JSON.stringify(this.selectedUserIds.map(id => id)),JSON.stringify(this.selectedOwnersSaPanel.ownerId) ,JSON.stringify(this.selectedOwnersSaPanel.storeId));
+        reallocateClients2({ customerIds: this.selectedUserIds, newOwnerId: this.selectedOwnersSaPanel.ownerId, newStoreId: this.selectedOwnersSaPanel.storeId })
+            .then(() => {
+                console.log('Customers updated successfully');
+                this.dispatchEvent(showToast('Error', 'Customers updated successfully ', 'success'));
+            })
+            .catch(error => {
+                this.dispatchEvent(showToast('Error', 'Failed to update customers: ' + error.body.message, 'error'));
+            });
+            this.isModalOpen = false;
     }
 }
