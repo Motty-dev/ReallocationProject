@@ -80,7 +80,7 @@ public with sharing class SingleReallocationService {
     public static List<String> getStoreNames(List<Id> storeIds) {
         try {
             List<Store__c> stores = [SELECT Name FROM Store__c WHERE Id IN :storeIds];
-        List<String> storeNames = new List<String>();
+            List<String> storeNames = new List<String>();
         for (Store__c store : stores) {
             storeNames.add(store.Name);
         }
@@ -88,19 +88,16 @@ public with sharing class SingleReallocationService {
             
         } catch (Exception e) {
             throw new AuraHandledException('Error retrieving store names: ' + e.getMessage());
-
         }
-        
     }
 
     @AuraEnabled
     public static void reallocateClients2(List<String> customerIds, Id newOwnerId, String newStoreId) {
         try {
-            List<Account> listCustomers = [SELECT Name, Id, OwnerId, Main_boutique__c FROM Account WHERE Id IN :customerIds];
             List<Account> listToUpdate = new List<Account>();
 
-        for(Account customerItem : listCustomers) {
-            Account customer = new Account(Id = customerItem.Id, OwnerId = newOwnerId, Main_boutique__c = newStoreId);
+        for(String customerItem : customerIds) {
+            Account customer = new Account(Id = customerItem, OwnerId = newOwnerId, Main_boutique__c = newStoreId);
             listToUpdate.add(customer);
         }
 
