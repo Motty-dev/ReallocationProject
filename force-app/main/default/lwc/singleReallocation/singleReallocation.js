@@ -1,3 +1,4 @@
+import { showToast } from 'c/errorHandler';
 import { LightningElement, wire, track } from 'lwc';
 import getOwners from '@salesforce/apex/UserService.getOwners';
 import getStores from '@salesforce/apex/StoreService.getStores';
@@ -7,8 +8,6 @@ import getAccounts from '@salesforce/apex/SingleReallocationService.getAccounts'
 import getStoreNames from '@salesforce/apex/SingleReallocationService.getStoreNames';
 import getCountryNames from '@salesforce/apex/SingleReallocationService.getCountryNames';
 import reallocateClients2 from '@salesforce/apex/SingleReallocationService.reallocateClients2';
-
-import { showToast } from 'c/errorHandler';
 
 export default class SingleReallocation extends LightningElement {
 
